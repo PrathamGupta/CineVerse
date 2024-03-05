@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CineVerse - Home</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to CineVerse</h1>
+        <nav>
+            <a href="{% url 'register' %}">Register</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Discover New Movies</h2>
+            <p>Explore a world of movies, rate and review your favorites, and join discussions with other movie enthusiasts.</p>
+        </section>
+        <section>
+            <h2>Join Our Community</h2>
+            <p>Connect with other movie lovers, create themed groups, and participate in virtual film screenings.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 CineVerse. All rights reserved.</p>
+    </footer>
+</body>
+</html>
