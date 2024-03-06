@@ -16,12 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import views
+from cineverse import views
 
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path("", views.home, name='home'),
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
-    path("", include("your_main_app.urls")),  # Replace "your_main_app" with your main app's name
+    # path("", include(".urls")),  # Replace "your_main_app" with your main app's name
 ]
