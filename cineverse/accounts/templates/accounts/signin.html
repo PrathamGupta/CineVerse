@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cineverse Sign In</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+  <div class="container">
+    <h1>CINEVERSE</h1>
+    <div class="sign-in-box">
+      <h2>Sign In</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input type="username" id="username" name="username" placeholder="Username" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Password" required>
+          <a href="#" class="forgot-password">Forgot your Password?</a>
+        </div>
+        <button type="submit" class="sign-in-btn">Sign In</button>
+        <div class="form-footer">
+          <div class="checkbox-group">
+            <input type="checkbox" id="keep-signed-in" name="keep-signed-in">
+            <label for="keep-signed-in">Keep me signed in</label>
+          </div>
+        </div>
+      </form>
+      <div>
+        <p>New to Cineverse? <a href="../signup/" class="sign-up-link">Sign Up</a></p>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="#">Terms of Service</a>
+      <a href="#">Privacy</a>
+      <a href="#">Help</a>
+      <p>&copy; 2024 Cineverse, Inc.</p>
+    </div>
+  </div>
+</body>
+</html>
