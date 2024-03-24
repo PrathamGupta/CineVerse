@@ -1,29 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineVerse - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            color: #ecf0f1;
+            background: #20262E; /* Dark background for the body */
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, #4A515A 0%, #20262E 100%); /* Gradient transition from header color to body color */
+            padding: 1em 2em;
+        }
+        
+
+        header > h1 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #F3EFE0; /* Logo color */
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.3em;
+            font-weight: 500;
+        }
+
+        nav {
+            display: flex;
+        }
+
+        nav a {
+            color: #F3EFE0;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            margin: 0 0.5em;
+            border-radius: 2px;
+            transition: background-color 0.3s;
+            
+        }
+
+        nav a:hover {
+            background-color: #e74c3c;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border-radius: 10px;
+            padding: 2em;
+            margin-top: 2em;
+            max-width: 960px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px 0 rgba(0,0,0,0.2);
+        }
+
+        .content-card h2 {
+            color: #333;
+            font-size: 2em;
+        }
+
+        .content-card p {
+            font-size: 1.1em;
+            margin-top: 1em;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border-radius: 20px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background-color: #c0392b;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to CineVerse</h1>
+        <h1>CineVerse</h1>
         <nav>
             <a href="{% url 'register' %}">Register</a>
             <a href="{% url 'login' %}">Login</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
     </header>
+    
     <main>
-        <section>
-            <h2>Discover New Movies</h2>
-            <p>Explore a world of movies, rate and review your favorites, and join discussions with other movie enthusiasts.</p>
-        </section>
-        <section>
-            <h2>Join Our Community</h2>
-            <p>Connect with other movie lovers, create themed groups, and participate in virtual film screenings.</p>
-        </section>
+        <div class="content-card">
+            <section>
+                <h2>Discover New Movies</h2>
+                <p>Explore a world of movies, rate and review your favorites, and join discussions with other movie enthusiasts.</p>
+            </section>
+            <section>
+                <h2>Join Our Community</h2>
+                <p>Connect with other movie lovers, create themed groups, and participate in virtual film screenings.</p>
+            </section>
+            <a href="watch.html" class="button">Watch Now</a>
+            <a href="join.html" class="button">Join Us</a>
+        </div>
     </main>
+
     <footer>
         <p>&copy; 2024 CineVerse. All rights reserved.</p>
     </footer>
 </body>
 </html>
+

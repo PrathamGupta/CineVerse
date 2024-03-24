@@ -2,45 +2,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cineverse Sign In</title>
-  <link rel="stylesheet" href="{% static 'styles.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cineverse - Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #20262E;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 150px;
+    font-weight: 500;
+    color: #F3EFE0;
+    letter-spacing: 0.3em;
+    margin-top: -50px;
+  }
+
+  .signin-container {
+    text-align: center;
+    background-color: #F3EFE0;
+    padding: 40px;
+    border-radius: 20px;
+    width: 365px;
+    
+  }
+
+  label {
+    display: block;
+    color: #20262E;
+    margin-bottom: 5px ;
+    position: relative;
+    text-align: left;
+  }
+
+  .forgot-password-link {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 14px;
+    color: #B2B1B9;
+    text-decoration: none;
+  }
+
+  .forgot-password-link:hover {
+    text-decoration: underline;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #fff;
+    color: #333;
+    
+    
+  }
+
+  .signup-button {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 20px 0;
+    border: none;
+    border-radius: 20px;
+    background-color: #20262E;
+    color: #F3EFE0;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .hr-text {
+    position: relative;
+    line-height: 1em;
+    outline: 0;
+    border: 0;
+    color: #B2B1B9;
+    text-align: center;
+    height: 1.2em;
+    opacity: 1;
+  }
+
+  .hr-text:before,
+  .hr-text:after {
+    content: '';
+    background: #B2B1B9;
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+  }
+
+  .hr-text:before {
+    right: 55%;
+  }
+
+  .hr-text:after {
+    left: 55%;
+  }
+
+  .hr-text span {
+    background: #F3EFE0;
+    padding: 0 10px;
+  }
+
+  .footer {
+    color: #B2B1B9;
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+    margin-top: 45px;
+    
+  }
+
+  .footer a {
+    color: #B2B1B9;
+    text-decoration: none;
+  }
+
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  .checkbox-container {
+    text-align: left;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .checkbox-container input {
+    margin-right: 5px;
+  }
+  
+  .checkbox-container label {
+    color: #B2B1B9;
+    font-size: 14px;
+  }
+  .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 25px; /* Updated font size */
+    font-weight: 500;
+    color: #B2B1B9; /* Updated text color */
+    margin-bottom: 20px;
+  }
+  .signin-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .signin-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #B2B1B9;
+    border: none;
+  }
+  
+  .signin-text {
+    margin: 0 10px;
+    color: #B2B1B9;
+    background-color: #F3EFE0; /* match your form's background color */
+    padding: 0 10px;
+  }
+  .terms {
+    font-size: 10px;
+    margin-top: 20px ;
+    margin-bottom: 0px;
+    color: #B2B1B9;
+  }
+  
+  
+  
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>CINEVERSE</h1>
-    <div class="sign-in-box">
-      <h2>Sign In</h2>
-      <form method="post">
-        {% csrf_token %}
-        <div class="input-group">
-          <label for="username">Username</label>
-          <input type="username" id="username" name="username" placeholder="Username" required>
-        </div>
-        <div class="input-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Password" required>
-          <a href="#" class="forgot-password">Forgot your Password?</a>
-        </div>
-        <button type="submit" class="sign-in-btn">Sign In</button>
-        <div class="form-footer">
-          <div class="checkbox-group">
-            <input type="checkbox" id="keep-signed-in" name="keep-signed-in">
-            <label for="keep-signed-in">Keep me signed in</label>
-          </div>
-        </div>
-      </form>
-      <div>
-        <p>New to Cineverse? <a href="../signup/" class="sign-up-link">Sign Up</a></p>
+  <div class="logo">CINEVERSE</div>
+  <div class="subtitle">Sign In</div>
+  <div class="signin-container">
+    <form class="signin-form">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Email">
+  
+      <label for="password">Password
+        <a href="#" class="forgot-password-link">Forgot your password?</a>
+      </label>
+      <input type="password" id="password" placeholder="Password">
+  
+      <div class="checkbox-container">
+        <input type="checkbox" id="keep-signed-in">
+        <label for="keep-signed-in">Keep me signed in</label>
       </div>
-    </div>
-    <div class="footer">
-      <a href="#">Terms of Service</a>
-      <a href="#">Privacy</a>
-      <a href="#">Help</a>
-      <p>&copy; 2024 Cineverse, Inc.</p>
-    </div>
+  
+      <button class="signup-button" type="submit">Sign In</button>
+      <div class="terms">
+        By creating an account, you agree to the Cineverse Terms of Service and Privacy Policy
+      </div>
+  
+      <div class="signin-separator">
+        <hr class="signin-line">
+        <div class="signin-text">New to CineVerse?</div>
+        <hr class="signin-line">
+      </div>
+      <button class="signup-button" onclick="location.href='your-signup-url'">Sign Up</button>
+    </form>
   </div>
-</body>
-</html>
+  
+
+  <p class="footer">
+    <a href="#">Terms of Service</a> | <a href="#">Privacy</a> | <a href="#">Help</a>
+  </p>
+  <p class="footer">
+    &copy; 2024 Cineverse, Inc.
+  </p>
+</body
