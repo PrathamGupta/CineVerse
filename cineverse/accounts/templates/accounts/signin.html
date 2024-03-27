@@ -27,6 +27,7 @@
     color: #F3EFE0;
     letter-spacing: 0.3em;
     margin-top: -50px;
+    text-decoration: none;
   }
 
   .signin-container {
@@ -191,7 +192,9 @@
 </style>
 </head>
 <body>
-  <div class="logo">CINEVERSE</div>
+  <div class="logo">
+    <a href ="{% url 'home' %}" class = "logo">CINEVERSE</a>
+  </div>
   <div class="subtitle">Sign In</div>
   <div class="signin-container">
     <form class="signin-form" action="{% url 'login' %}" method="post">
