@@ -1,0 +1,227 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #20262E;
+    color: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-container {
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 2em;
+    /* background: rgba(0, 0, 0, 0.6); Slightly transparent background */
+    height: 100%;
+    max-width: 1300px;
+    color: #fff;
+    position: relative;
+  }
+  
+  .logo {
+
+    margin: 0;
+    font-size: 1.5em;
+    color: #F3EFE0;
+    /* Logo color */
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.3em;
+    font-weight: 800;
+
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: larger;
+}
+
+nav .cta {
+    border: 1px solid #fff;
+    padding: 0.5em 1em;
+    border-radius: 20px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column; /* Stacks children vertically */
+    align-items: center; /* Centers children horizontally */
+    justify-content: center;
+}
+
+.main-sub-container {
+    width: 1300px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-info-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat {
+    padding: 1rem;
+    border-right: 2px #F3EFE0 solid;
+    text-align: center;
+}
+
+.stat:last-child {
+    border-right: none;
+}
+.profile-nav-container{
+    display:flex;
+    justify-content: center;
+
+
+}
+
+  .profile-main {
+    /* display: flex; */
+    text-align: center;
+  }
+  
+  .profile-sidebar {
+    display: none;
+  }
+
+  .profile-nav {
+    display: inline-block; /* Makes the nav container fit its content */
+    margin: 0 auto; /* This will help in centering if the display of parent is flex */
+  }
+  
+  .nav-list {
+    display: flex; /* This will layout your list items in a row */
+    justify-content: center; /* This will center the list items */
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .nav-list li {
+    margin: 0 10px; /* Add spacing between your list items */
+  }
+  
+  .nav-list li a {
+    color: #F3EFE0;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .nav-list li a:hover,
+  .nav-list li a.active {
+    background-color: #333;
+  }
+  
+  .user-info {
+    text-align: center;
+  }
+  
+  .user-image {
+    width: 100px;
+    height: 100px;
+    background-color: #444;
+    border-radius: 50%;
+    margin: 0 auto;
+  }
+  
+  .username {
+    font-size: 24px;
+    color: #F3EFE0;
+  }
+  
+  .edit-profile {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+  }
+  
+  .profile-content {
+    width: 50%;
+    padding: 20px;
+  }
+  
+  .favorite-films, .recent-activity {
+    background-color: #333;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-ads {
+    width: 25%;
+    padding: 20px;
+  }
+  
+  .profile-footer {
+    /* Add styles for your footer */
+  }
+  
+  /* Add to your existing Profile.css */
+
+.content-container {
+    width: 100%;
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  
+  .favorite-films,
+  .recent-activity {
+    background-color: #333;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+  }
+  
+  .favorite-films h2,
+  .recent-activity h2 {
+    color: #F3EFE0;
+    margin-bottom: 10px;
+  }
+  
+  .film-list,
+  .activity-list {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .film,
+  .activity {
+    background-color: #20262E;
+    width: calc(33.333% - 10px);
+    height: 150px;
+    border-radius: 4px;
+  }
+  
+  .all-activity {
+    display: block;
+    text-align: right;
+    text-decoration: none;
+    color: #F3EFE0;
+    margin-top: 10px;
+  }
+  
+  .all-activity:hover {
+    text-decoration: underline;
+  }
+  

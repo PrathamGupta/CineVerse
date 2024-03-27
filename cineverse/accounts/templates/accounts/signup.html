@@ -136,15 +136,16 @@
   <div class="logo">CINEVERSE</div>
   <div class="subtitle">Create Account</div>
   <div class="signup-container">
-    <form class="signup-form">
-      <label class="form-label" for="name">Your Name</label>
-      <input type="text" id="name" placeholder="First and Last Name">
+    <form class="signup-form" action="{% url 'register' %}" method="post">
+      {% csrf_token %}
+      <label class="form-label" for="name">Username</label>
+      <input type="text" id="name" name="username" placeholder="Username">
       <label class="form-label" for="email">Email</label>
-      <input type="email" id="email" placeholder="Email">
+      <input type="email" id="email" name="email" placeholder="Email">
       <label class="form-label" for="password">Password</label>
-      <input type="password" id="password" placeholder="Password">
+      <input type="password" id="password" name="password1" placeholder="Password">
       <label class="form-label" for="confirm-password">Re-enter Password</label>
-      <input type="password" id="confirm-password" placeholder="Re-enter Password">
+      <input type="password" id="confirm-password" name="password2" placeholder="Re-enter Password">
       <button class="signup-button" type="submit">Create Account</button>
     </form>
     <p class ="or">OR</p>

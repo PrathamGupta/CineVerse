@@ -1,0 +1,187 @@
+{% load static %}
+<!-- Assuming you have static files to load -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <link href="{% static 'profile.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="nav-container">
+      <header class="profile-header">
+        <div class="logo">CineVerse</div>
+        <nav>
+          <a href="{% url 'login' %}">Sign In</a>
+          <a href="#">Films</a>
+          <a href="#">Lists</a>
+          <a href="#">Members</a>
+          <a href="#">Journal</a>
+          <a href="{% url 'register' %}" class="cta">Create Account</a>
+        </nav>
+      </header>
+    </div>
+
+    <!-- Main contianer -->
+    <main class="main-container">
+      <!-- Profile Information -->
+      <div class="main-sub-container">
+        <div class="profile-info-container">
+          <!-- Profile Image -->
+          <div class="user-image"></div>
+
+          <!-- Profile Name -->
+          <div>
+            <h1>{{user.username}}</h1>
+          </div>
+
+          <button>Edit Profile</button>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat">0 <br>Films</span>
+          <span class="stat">0 <br>Following</span>
+          <span class="stat">0 <br>Followers</span>
+        </div>
+      </div>
+
+      <div class="profile-nav-container">
+        <nav class="profile-nav">
+            <ul class="nav-list">
+              <li>
+                <a href="" class="{% if view == 'overview' %}active{% endif %}"
+                  >Overview</a
+                >
+              </li>
+              <li>
+                <a href="" class="{% if view == 'films' %}active{% endif %}"
+                  >Films</a
+                >
+              </li>
+              <li>
+                <a href="" class="{% if view == 'reviews' %}active{% endif %}"
+                  >Reviews</a
+                >
+              </li>
+              <li>
+                <a href="" class="{% if view == 'watchlist' %}active{% endif %}"
+                  >Watchlist</a
+                >
+              </li>
+              <li>
+                <a href="" class="{% if view == 'lists' %}active{% endif %}"
+                  >Lists</a
+                >
+              </li>
+              <li>
+                <a href="" class="{% if view == 'likes' %}active{% endif %}"
+                  >Likes</a
+                >
+              </li>
+              <li>
+                <a href="" class="{% if view == 'tags' %}active{% endif %}"
+                  >Tags</a
+                >
+              </li>
+            </ul>
+          </nav>
+      </div>
+
+      <div class="content-container">
+        <!-- Favorite Films -->
+        <section class="favorite-films">
+          <h2>Favorite Films</h2>
+          <p>Don't forget to select your favorite films!</p>
+          <div class="film-list">
+            <div class="film"></div>
+            <div class="film"></div>
+            <div class="film"></div>
+          </div>
+        </section>
+      
+        <!-- Recent Activity -->
+        <section class="recent-activity">
+          <h2>Recent Activity</h2>
+          <div class="activity-list">
+            <div class="activity"></div>
+            <div class="activity"></div>
+            <div class="activity"></div>
+          </div>
+          <a href="#" class="all-activity">ALL</a>
+        </section>
+      </div>
+    </main>
+
+    <!-- <main class="profile-main">
+      <aside class="profile-sidebar">
+
+
+        <div class="user-info">
+          <div class="user-image"></div>
+          <h1 class="username">{{ user.username }}</h1>
+          <button class="edit-profile">Edit Profile</button>
+          <div class="stats">
+            <span class="stat">0 Films</span>
+            <span class="stat">0 Following</span>
+            <span class="stat">0 Followers</span>
+          </div>
+        </div>
+
+
+        <nav class="profile-nav">
+          <ul class="nav-list">
+            <li>
+              <a href="" class="{% if view == 'overview' %}active{% endif %}"
+                >Overview</a
+              >
+            </li>
+            <li>
+              <a href="" class="{% if view == 'films' %}active{% endif %}"
+                >Films</a
+              >
+            </li>
+            <li>
+              <a href="" class="{% if view == 'reviews' %}active{% endif %}"
+                >Reviews</a
+              >
+            </li>
+            <li>
+              <a href="" class="{% if view == 'watchlist' %}active{% endif %}"
+                >Watchlist</a
+              >
+            </li>
+            <li>
+              <a href="" class="{% if view == 'lists' %}active{% endif %}"
+                >Lists</a
+              >
+            </li>
+            <li>
+              <a href="" class="{% if view == 'likes' %}active{% endif %}"
+                >Likes</a
+              >
+            </li>
+            <li>
+              <a href="" class="{% if view == 'tags' %}active{% endif %}"
+                >Tags</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside> -->
+
+    <!-- <section class="profile-content">
+        <div class="favorite-films"> -->
+    <!-- Favorite films go here -->
+    <!-- </div> -->
+    <!-- <div class="recent-activity"> -->
+    <!-- Recent activity goes here -->
+    <!-- </div> -->
+    <!-- </section> -->
+    <!-- </main> -->
+
+    <footer class="profile-footer">
+      <!-- Footer goes here -->
+    </footer>
+  </body>
+</html>

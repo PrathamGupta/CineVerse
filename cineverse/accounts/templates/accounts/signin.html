@@ -59,8 +59,8 @@
     text-decoration: underline;
   }
 
-  input[type="email"],
-  input[type="password"] {
+  input[id="username"],
+  input[id="password"] {
     width: calc(100% - 20px);
     padding: 10px;
     margin-bottom: 20px;
@@ -73,6 +73,7 @@
   }
 
   .signup-button {
+    display: inline-block;
     width: calc(100% - 20px);
     padding: 10px;
     margin: 20px 0;
@@ -82,6 +83,7 @@
     color: #F3EFE0;
     cursor: pointer;
     font-size: 15px;
+    text-decoration: none;
   }
 
   .hr-text {
@@ -192,31 +194,32 @@
   <div class="logo">CINEVERSE</div>
   <div class="subtitle">Sign In</div>
   <div class="signin-container">
-    <form class="signin-form">
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="Email">
-  
+    <form class="signin-form" action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Username">
+    
       <label for="password">Password
         <a href="#" class="forgot-password-link">Forgot your password?</a>
       </label>
-      <input type="password" id="password" placeholder="Password">
-  
+      <input type="password" id="password" name="password" placeholder="Password">
+    
       <div class="checkbox-container">
         <input type="checkbox" id="keep-signed-in">
         <label for="keep-signed-in">Keep me signed in</label>
       </div>
-  
+    
       <button class="signup-button" type="submit">Sign In</button>
       <div class="terms">
         By creating an account, you agree to the Cineverse Terms of Service and Privacy Policy
       </div>
-  
+    
       <div class="signin-separator">
         <hr class="signin-line">
         <div class="signin-text">New to CineVerse?</div>
         <hr class="signin-line">
       </div>
-      <button class="signup-button" onclick="location.href='your-signup-url'">Sign Up</button>
+      <a href="{% url 'register' %}" class="signup-button">Sign Up</a>
     </form>
   </div>
   
@@ -227,4 +230,4 @@
   <p class="footer">
     &copy; 2024 Cineverse, Inc.
   </p>
-</body
+</body>

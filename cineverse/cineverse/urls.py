@@ -25,5 +25,6 @@ urlpatterns = [
     path("", views.home, name='home'),
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
+    path("profile/", views.profile, name='profile')
     # path("", include(".urls")),  # Replace "your_main_app" with your main app's name
 ]
