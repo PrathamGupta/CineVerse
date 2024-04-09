@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import classes from './SignIn.module.css';
 import { Link } from 'react-router-dom';
 import UserContext from '../userContext';
-import './SignIn.css'; // Your styles here
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 
@@ -39,34 +39,34 @@ const SignIn = () => {
         }
     };
     return (
-        <div>
-            <div className="logo-signIn">CINEVERSE</div>
-            <div className="subtitle">Sign In</div>
-            <div className="signin-container">
+        <div className={classes.mainContainer}>
+            <div className={classes["logo-signIn"]}>CINEVERSE</div>
+            <div className={classes["subtitle"]}>Sign In</div>
+            <div className={classes["signin-container"]}>
                 {/* Display error message if it exists */}
-            {errorMessage && <div className="error-message">{errorMessage}</div>}
-                <form onSubmit= {handleSubmit} className="signin-form" method="post">
+            {errorMessage && <div className={classes["error-message"]}>{errorMessage}</div>}
+                <form onSubmit= {handleSubmit} className={classes["signin-form"]} method="post">
                     <label htmlFor="username">Username</label>
                     <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" id="username" name="username" />
                     <label htmlFor="password">Password </label>
                         {/* <a href="#" className="forgot-password-link">Forgot your password?</a> */}
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" id="password" name="password" />
-                    <div className="checkbox-container">
+                    <div className={classes["checkbox-container"]}>
                         <input type="checkbox" id="keep-signed-in" />
                         <label htmlFor="keep-signed-in">Keep me signed in</label>
                     </div>
 
-                    <button className="signup-button" type="submit">Sign In</button>
-                    <div className="terms">
+                    <button className={classes["signup-button"]} type="submit">Sign In</button>
+                    <div className={classes["terms"]}>
                         By creating an account, you agree to the Cineverse Terms of Service and Privacy Policy
                     </div>
                 </form>
             </div>
 
-            <p className="footer">
+            <p className={classes["footer"]}>
                 <Link to="#">Terms of Service</Link> | <Link to="#">Privacy</Link> | <Link to="#">Help</Link>
             </p>
-            <p className="footer">
+            <p className={classes["footer"]}>
                 © 2024 Cineverse, Inc.
             </p>
         </div>

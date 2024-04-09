@@ -1,4 +1,4 @@
-body {
+/* body {
     display: flex; 
     align-items: center; 
     justify-content: center; 
@@ -11,9 +11,7 @@ body,html {
     padding: 0;
     height: 100vh;
     font-family: 'Roboto', sans-serif;
-    
-    /* Replace with your image path */
-}
+} */
 
 .container {
     height: 100%;
@@ -26,12 +24,24 @@ body,html {
 
 }
 
-header {
+.navContainer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1em 2em;
-    /* background: rgba(0, 0, 0, 0.6); Slightly transparent background */
+    padding: 1.5rem;
+}
+
+.mainContainer {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.showcaseContainer {
+    height: 100%;
+    padding-top: 7rem;
 }
 
 .logo {
@@ -48,7 +58,7 @@ header {
 
 .background-image-container {
     position: absolute;
-    height: 80vh;
+    height: 100vh;
     width: 100vw;
     top: 0;
     left: 0;
@@ -69,7 +79,7 @@ z-index: 1; /* Above the image */
 
 
 .background-image-container > img {
-    height: 100% !important;
+    height: 80% !important;
     width: 100% !important;
     object-fit: cover; /* Cover the area without stretching the image */
     position: absolute; /* Make sure the image covers the entire container */
@@ -171,6 +181,22 @@ text-transform: uppercase;
 .flat-button.-large {
 font-size: 1.23076923rem;
 padding: .625em 1.5em;
+}
+
+.buttonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem
+}
+
+.button {
+    background: #00c030;
+    color: #F3EFE0;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
 }
 
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './SignUp.css'; // Your styles here
+import classes from './SignUp.module.css'; // Your styles here
 import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
@@ -36,12 +36,12 @@ const SignUp = () => {
     };
 
     return (
-        <div>
-            <div className="logo-sign">CINEVERSE</div>
-            <div className="subtitle">Create Account</div>
-            <div className="signup-container">
+        <div className = {classes.mainContainer}>
+            <div className={classes["logo-sign"]}>CINEVERSE</div>
+            <div className={classes["subtitle"]}>Create Account</div>
+            <div className={classes["signup-container"]}>
                 <form onSubmit= {handleSubmit} className="signup-form">
-                    <label className="form-label" htmlFor="name">Username</label>
+                    <label className={classes["form-label"]} htmlFor="name">Username</label>
                     <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} id="name" name="username" placeholder="Username" />
                     <label class="form-label" for="email">Email</label>
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} id="email" name="email" placeholder="Email" />
@@ -49,23 +49,23 @@ const SignUp = () => {
                     <input type="password" value={password1} onChange={(e) => setPassword1(e.target.value)} id="password" name="password1" placeholder="Password" />
                     <label class="form-label" for="confirm-password">Re-enter Password</label>
                     <input type="password" value={password2} onChange={(e) => setPassword2(e.target.value)} id="confirm-password" name="password2" placeholder="Re-enter Password" />
-                    <button className="signup-button" type="submit">Create Account</button>
+                    <button className={classes["signup-button"]} type="submit">Create Account</button>
                 </form>
                 {/* <p className="or">OR</p> */}
                 {/* ... social buttons */}
-                <p className="footer1">
-                    Already have an account? <Link to="/signin" className="login-link">Sign in</Link>
+                <p className={classes["footer1"]}>
+                    Already have an account? <Link to="/signin" className={classes["login-link"]}>Sign in</Link>
                 </p>
-                <div className="terms">
+                <div className={classes["terms"]}>
                     By creating an account, you agree to the Cineverse Terms of Service and Privacy Policy
                 </div>
             </div>
-            <div>
-                <p className="footer">
+            {/* <div> */}
+                <p className={classes["footer"]}>
                     <Link to="#">Terms of Service</Link> | <Link to="#">Privacy</Link> | <Link to="#">Help</Link>
                 </p>
-                <p className="footer">© 2024 Cineverse, Inc.</p>
-            </div>
+                <p className={classes["footer"]}>© 2024 Cineverse, Inc.</p>
+            {/* </div> */}
         </div>
     );
 };
