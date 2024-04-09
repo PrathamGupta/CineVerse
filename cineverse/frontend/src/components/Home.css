@@ -1,0 +1,176 @@
+body {
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    height: 100%; 
+    background-color:#14181c;
+}
+
+body,html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    
+    /* Replace with your image path */
+}
+
+.container {
+    height: 100%;
+    max-width: 1300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #fff;
+    position: relative;
+
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 2em;
+    /* background: rgba(0, 0, 0, 0.6); Slightly transparent background */
+}
+
+.logo {
+
+    margin: 0;
+    font-size: 1.5em;
+    color: #F3EFE0;
+    /* Logo color */
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.3em;
+    font-weight: 800;
+
+}
+
+.background-image-container {
+    position: absolute;
+    height: 80vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: -10;
+    overflow: hidden;
+}
+
+.background-image-container::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: linear-gradient(90deg,#14181d 0,rgba(20,24,29,.986) .97%,rgba(20,24,29,.945) 2.07833333%,rgba(20,24,29,.883) 3.29666667%,rgba(20,24,29,.803) 4.60166667%,rgba(20,24,29,.711) 5.96666667%,rgba(20,24,29,.61) 7.365%,rgba(20,24,29,.504) 8.77166667%,rgba(20,24,29,.398) 10.16%,rgba(20,24,29,.296) 11.505%,rgba(20,24,29,.203) 12.78%,rgba(20,24,29,.122) 13.95833333%,rgba(20,24,29,.059) 15.01666667%,rgba(20,24,29,.016) 15.92833333%,rgba(20,24,29,0) 16.66666667%,rgba(20,24,29,0) 83.33333333%,rgba(20,24,29,.016) 84.07166667%,rgba(20,24,29,.059) 84.98333333%,rgba(20,24,29,.122) 86.04166667%,rgba(20,24,29,.203) 87.22%,rgba(20,24,29,.296) 88.495%,rgba(20,24,29,.398) 89.84%,rgba(20,24,29,.504) 91.22833333%,rgba(20,24,29,.61) 92.635%,rgba(20,24,29,.711) 94.03333333%,rgba(20,24,29,.803) 95.39833333%,rgba(20,24,29,.883) 96.70333333%,rgba(20,24,29,.945) 97.92166667%,rgba(20,24,29,.986) 99.03%,#14181d),linear-gradient(0deg,#14181d 0,#14181d 21.48148148%,rgba(20,24,29,.986) 23.63703704%,rgba(20,24,29,.945) 26.1%,rgba(20,24,29,.883) 28.80740741%,rgba(20,24,29,.803) 31.70740741%,rgba(20,24,29,.711) 34.74074074%,rgba(20,24,29,.61) 37.84814815%,rgba(20,24,29,.504) 40.97407407%,rgba(20,24,29,.398) 44.05925926%,rgba(20,24,29,.296) 47.04814815%,rgba(20,24,29,.203) 49.88148148%,rgba(20,24,29,.122) 52.5%,rgba(20,24,29,.059) 54.85185185%,rgba(20,24,29,.016) 56.87777778%,rgba(20,24,29,0) 58.51851852%);
+z-index: 1; /* Above the image */
+}
+
+
+.background-image-container > img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover; /* Cover the area without stretching the image */
+    position: absolute; /* Make sure the image covers the entire container */
+    top: 0;
+    left: 0;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: larger;
+}
+
+nav .cta {
+    border: 1px solid #fff;
+    padding: 0.5em 1em;
+    border-radius: 20px;
+}
+
+main .hero {
+    text-align: center;
+    padding: 15em 1em 2em;
+    font-family: Urbanist;
+    
+}
+
+main .hero h1 {
+    font-size: 2.5em;
+    max-width: 800px;
+    margin: auto;
+    line-height: 1.2;
+}
+
+main .hero .btn-get-started {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 0.8em 2em;
+    background-color: #E50914;
+    /* Netflix red for demo, replace with your desired color */
+    color: #fff;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 1em;
+    background: #14181c;
+}
+
+footer .apple {
+    font-weight: bold;
+}
+.fonter{
+    font-weight: bolder;
+    font-size: 350%;
+}
+.fontie{
+    font-weight: 500;
+    font-size: 150%;
+}
+
+.flat-button.-action {
+background: #00c030;
+color: #fff;
+}
+
+
+.flat-button.-uppercase {
+letter-spacing: .075em;
+text-transform: uppercase;
+text-decoration: none;
+}
+
+
+.flat-button:not([disabled]) {
+cursor: pointer;
+}
+
+    
+.flat-button {
+border: none;
+border-radius: 3px;
+display: inline-block;
+font-family: Urbanist;
+font-weight: 400;
+line-height: 1;
+margin-left: 2rem;
+}
+
+.flat-button.-uppercase {
+letter-spacing: .075em;
+text-transform: uppercase;
+}
+
+
+.flat-button.-large {
+font-size: 1.23076923rem;
+padding: .625em 1.5em;
+}
+
+
