@@ -4,8 +4,12 @@ import classes from './Profile.module.css';
 import UserContext from '../userContext';
 
 const Profile = () => {
-    const user = useContext(UserContext)
-    console.log(user.user.username)
+    const { user, logout } = useContext(UserContext); // Destructure to get user from context
+    console.log(user.username)
+    const handleLogout = (event) => {
+        event.preventDefault();
+        logout();
+    };
     return (
         <div className={classes.bodyContainer}>
             <div className={classes["nav-container"]}>
@@ -17,7 +21,7 @@ const Profile = () => {
                         <Link to="/lists">Lists</Link>
                         <Link to="/members">Members</Link>
                         <Link to="/journal">Journal</Link>
-                        <Link to="/logout" className="cta">Logout</Link>
+                        <Link to="/" onClick={handleLogout} className="cta">Logout</Link>
                     </nav>
                 </header>
             </div>
@@ -27,7 +31,8 @@ const Profile = () => {
                     <div className={classes["profile-info-container"]}>
                         <div className={classes["user-image"]}></div>
                         <div>
-                            <h2>{user.user.username}</h2>
+                            {/* Check if user and user.user are not null before accessing username */}
+                            <h2>{user ? user.username : 'Loading...'}</h2>
                         </div>
                         <button>Edit Profile</button>
                     </div>
