@@ -4,7 +4,11 @@ from .forms import RegisterForm, LoginForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-
+from django.utils.decorators import method_decorator
+from .models import Post, User
+from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.forms.models import model_to_dict
 
 def logout_view(request):
     logout(request)
@@ -49,3 +53,36 @@ def signup(request):
     
     # If it's a GET request, you might want to return an empty form or disallow the GET request
     return JsonResponse({"status": "error", "message": "GET request not allowed"}, status=405)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CreatePostView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            content = data.get('content')
+            user = User.objects.get(username=data.get('user'))
+            if content:
+                post = Post.objects.create(user=user, content=content)
+                # Use model_to_dict to convert the post object to a dictionary
+                post_dict = model_to_dict(post)
+                # Add the username to the dictionary
+                post_dict['user__username'] = user.username
+                # Format the created_at field to a string
+                post_dict['created_at'] = post.created_at.isoformat()
+                return JsonResponse(post_dict, status=201)
+            else:
+                return JsonResponse({'error': 'Empty content'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UserPostsView(View):
+    # @method_decorator(login_required)
+    def get(self, request):
+        username = request.GET.get('username')
+        user = User.objects.get(username=username)
+        posts = Post.objects.select_related('user').filter().values(
+            'user__username', 'content', 'created_at'
+        ).order_by('-created_at')
+        print(posts)
+        return JsonResponse(list(posts), safe=False)

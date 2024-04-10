@@ -30,7 +30,7 @@ const SignIn = () => {
             setUser({ username: data.username });
             // Handle login success, store the token, etc.
             // Redirect to a new route after login
-            navigate('/profile')
+            navigate('/feed')
         } else {
             const data = await response.json();
             setErrorMessage(data.message || 'Invalid username/password');
