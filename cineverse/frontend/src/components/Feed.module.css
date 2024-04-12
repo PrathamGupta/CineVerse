@@ -1,0 +1,142 @@
+/* Feed.module.css */
+.bodyContainer {
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+  background-color: #20262E;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.feedContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: #20262E;
+  color: white;
+  min-height: 100vh;
+}
+
+.navBar {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #000;
+  /* Add other styles here */
+}
+
+.nav-container {
+  font-family: 'Arial', sans-serif;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1em 2em;
+  /* background: rgba(0, 0, 0, 0.6); Slightly transparent background */
+  height: 100%;
+  max-width: 1300px;
+  color: #fff;
+  position: relative;
+}
+
+.logo {
+  margin: 0;
+  font-size: 1.5em;
+  color: #F3EFE0;
+  /* Logo color */
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.3em;
+  font-weight: 800;
+  /* text-decoration: none; */
+  }
+
+/* Style for the profile icon */
+.profile-icon {
+  /* Add styles for a profile icon here */
+}
+
+.main-container {
+  width: calc(100% - 40px); /* Example: full width minus padding */
+  max-width: 800px; /* or however wide you'd like it to be */
+  padding: 20px;
+  margin: 0 auto; /* Centers the content if it's not as wide as the page */
+  
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; */
+}
+
+/* Button to create new posts */
+.create-post-button {
+  background-color: #F3EFE0;
+  color: #20262E;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* Container for feed content */
+.feed-content {
+  margin-top: 20px;
+}
+
+/* Individual post styling */
+.post {
+  background-color: #333;
+  margin: 10px 0;
+  padding: 20px;
+  border-radius: 10px;
+  /* Additional styling for posts */
+}
+
+.profileIcon img {
+  height: 30px; /* Or the size you want */
+  width: 30px; /* Or the size you want */
+  border-radius: 50%; /* Circular image for profile icon */
+  object-fit: cover; /* Ensures the image covers the area */
+  margin-left: auto; /* Push it to the right side of the nav */
+}
+
+.postCreationForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.postTextArea {
+  width: 90%; /* This will make the textarea span the full width of its container */
+  min-height: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #657786; /* Adding a border for better visibility */
+  background-color: #fff;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 16px;
+  resize: vertical; /* Allows the user to resize the textarea vertically */
+}
+
+.postSubmitButton {
+  width: 100px;
+  padding: 10px 20px;
+  background-color: #1DA1F2; /* Example: Twitter-like blue button */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  /* align-self: flex-end; */
+  margin-top: 10px;
+}
+
+.postDateTime {
+  float: right;
+  color: #666;
+  font-size: 0.8rem;
+}
