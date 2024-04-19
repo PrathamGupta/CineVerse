@@ -3,6 +3,47 @@ import { Link } from 'react-router-dom';
 import classes from './Profile.module.css';
 import UserContext from '../userContext';
 import { useFavorites } from './FavoritesContext';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
+// Slider settings for react-slick
+const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    centerMode: true, // Enables centered view where the active slide is in the center
+    centerPadding: '60px',
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    autoplay: true,
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: true
+            }
+        },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2
+            }
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+        }
+    ]
+};
+
 
 const Profile = () => {
     const { user, logout } = useContext(UserContext);
@@ -48,6 +89,7 @@ const Profile = () => {
         event.preventDefault();
         logout();
     };
+    
 
     return (
         <div className={classes.bodyContainer}>
@@ -101,14 +143,18 @@ const Profile = () => {
                     <section className={classes["favorite-films"]}>
                         <h2>Favorite Films</h2>
                         {favorites.length > 0 ? (
-                            <div className={classes["film-list"]}>
+                            
+                            
+                                <Slider {...settings}>
                                 {favorites.map((movie, index) => (
                                     <div key={index} className={classes["film"]}>
                                         <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className={classes["movieImage"]}/>
                                         <h3>{movie.title}</h3>
                                     </div>
                                 ))}
-                            </div>
+                              </Slider>  
+                            
+                            
                         ) : <p>Don't forget to select your favorite films!</p>}
                     </section>
 

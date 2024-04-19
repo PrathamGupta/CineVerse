@@ -262,18 +262,84 @@ nav .cta {
     text-decoration: underline;
   }
   
+  .film-list {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+  }
+  
   .film {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;  /* Space between movie entries */
-    border: 1px solid #ccc; /* Optional: adds a border around each movie */
-    padding: 10px; /* Padding around the content inside the film div */
-}
-
-.film img {
-    width: 100%; /* Makes the image responsive */
-    max-width: 300px; /* Maximum width of the image */
-    height: auto; /* Scales the height according to the width to maintain aspect ratio */
-    object-fit: contain; /* Ensures the image is scaled correctly within the dimensions */
-}
+    background-color: #222;
+    color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    margin: auto;
+    width: 200px; /* Adjust the width as necessary */
+    height : 300px;
+  }
+  
+  .film img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .film h3 {
+    margin: 10px 0;
+    padding: 0 5px;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .slick-list {
+    margin: 0 auto;
+  }
+  
+  .slick-slide {
+    padding: 0 10px;
+  }
+  
+  .slick-track {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .slick-slide {
+      padding: 0 10px;
+    }
+    
+    .film {
+      width: 150px; /* Adjust the width for smaller screens */
+    }
+  
+    .film img {
+      max-width: 150px; /* Adjust if necessary */
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .slick-slide {
+      padding: 0 5px;
+    }
+  
+    .film {
+      width: 100px; /* Adjust the width for even smaller screens */
+    }
+  
+    .film img {
+      max-width: 100px; /* Adjust if necessary */
+    }
+  }
+  
