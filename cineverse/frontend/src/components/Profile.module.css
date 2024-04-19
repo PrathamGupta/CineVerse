@@ -179,10 +179,38 @@ nav .cta {
     width: 25%;
     padding: 20px;
   }
+
   
-  .profile-footer {
+  .add-movie-link {
+    position: fixed; /* or absolute, depending on layout */
+    right: 20px; /* Adjust based on layout */
+    bottom: 20px; /* Adjust based on layout */
+    z-index: 10; /* Ensure it's above other content */
+}
+
+.plus-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    background-color: #007bff; /* Theme color */
+    color: white;
+    font-size: 30px; /* Adjust as needed */
+    border-radius: 50%;
+    text-decoration: none; /* Removes underline */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.plus-icon:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+  
+ /* .profile-footer {
     /* Add styles for your footer */
-  }
+  /*}
   
   /* Add to your existing Profile.css */
 
@@ -234,3 +262,18 @@ nav .cta {
     text-decoration: underline;
   }
   
+  .film {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;  /* Space between movie entries */
+    border: 1px solid #ccc; /* Optional: adds a border around each movie */
+    padding: 10px; /* Padding around the content inside the film div */
+}
+
+.film img {
+    width: 100%; /* Makes the image responsive */
+    max-width: 300px; /* Maximum width of the image */
+    height: auto; /* Scales the height according to the width to maintain aspect ratio */
+    object-fit: contain; /* Ensures the image is scaled correctly within the dimensions */
+}
