@@ -8,6 +8,7 @@ import Profile from './components/profile';
 import Feed from './components/Feed';
 import AddMovie from './components/AddMovie';
 import { FavoritesProvider } from './components/FavoritesContext';
+import MovieDetail from './components/MovieDetail'; 
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/feed" element={<Feed />} />
             <Route path="/add-movie" element={<AddMovie />} />
+            <Route path="/movie/:id" element={<MovieDetail />} />
           </Routes>
         </FavoritesProvider>
       </UserProvider>

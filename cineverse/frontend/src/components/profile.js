@@ -148,8 +148,10 @@ const Profile = () => {
                                 <Slider {...settings}>
                                 {favorites.map((movie, index) => (
                                     <div key={index} className={classes["film"]}>
+                                        <Link to={`/movie/${movie.id}`}> {/* Add Link component here */}
                                         <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className={classes["movieImage"]}/>
                                         <h3>{movie.title}</h3>
+                                        </Link>
                                     </div>
                                 ))}
                               </Slider>  
