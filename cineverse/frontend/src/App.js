@@ -6,18 +6,25 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Profile from './components/profile';
 import Feed from './components/Feed';
+import AddMovie from './components/AddMovie';
+import { FavoritesProvider } from './components/FavoritesContext';
+import MovieDetail from './components/MovieDetail'; 
 
 function App() {
   return (
     <Router>
-      <UserProvider> {/* Use UserProvider instead of UserContext.Provider */}
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/signin" element={<SignIn />} /> {/* Fix: Use element instead of Component */}
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/feed" element={<Feed />} />
-        </Routes>
+      <UserProvider> {/* UserProvider provides user context to all routes */}
+        <FavoritesProvider> {/* FavoritesProvider provides favorites context to all routes */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/feed" element={<Feed />} />
+            <Route path="/add-movie" element={<AddMovie />} />
+            <Route path="/movie/:id" element={<MovieDetail />} />
+          </Routes>
+        </FavoritesProvider>
       </UserProvider>
     </Router>
   );

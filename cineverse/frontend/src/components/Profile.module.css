@@ -179,10 +179,38 @@ nav .cta {
     width: 25%;
     padding: 20px;
   }
+
   
-  .profile-footer {
+  .add-movie-link {
+    position: fixed; /* or absolute, depending on layout */
+    right: 20px; /* Adjust based on layout */
+    bottom: 20px; /* Adjust based on layout */
+    z-index: 10; /* Ensure it's above other content */
+}
+
+.plus-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    background-color: #007bff; /* Theme color */
+    color: white;
+    font-size: 30px; /* Adjust as needed */
+    border-radius: 50%;
+    text-decoration: none; /* Removes underline */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.plus-icon:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+  
+ /* .profile-footer {
     /* Add styles for your footer */
-  }
+  /*}
   
   /* Add to your existing Profile.css */
 
@@ -232,5 +260,86 @@ nav .cta {
   
   .all-activity:hover {
     text-decoration: underline;
+  }
+  
+  .film-list {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+  }
+  
+  .film {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #222;
+    color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    margin: auto;
+    width: 200px; /* Adjust the width as necessary */
+    height : 300px;
+  }
+  
+  .film img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .film h3 {
+    margin: 10px 0;
+    padding: 0 5px;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .slick-list {
+    margin: 0 auto;
+  }
+  
+  .slick-slide {
+    padding: 0 10px;
+  }
+  
+  .slick-track {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .slick-slide {
+      padding: 0 10px;
+    }
+    
+    .film {
+      width: 150px; /* Adjust the width for smaller screens */
+    }
+  
+    .film img {
+      max-width: 150px; /* Adjust if necessary */
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .slick-slide {
+      padding: 0 5px;
+    }
+  
+    .film {
+      width: 100px; /* Adjust the width for even smaller screens */
+    }
+  
+    .film img {
+      max-width: 100px; /* Adjust if necessary */
+    }
   }
   
