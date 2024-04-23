@@ -9,6 +9,9 @@ from .models import Post, User
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.forms.models import model_to_dict
+from django.views.decorators.http import require_POST, require_http_methods
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import UpdateView, DeleteView
 
 def logout_view(request):
     logout(request)
@@ -82,7 +85,43 @@ class UserPostsView(View):
         username = request.GET.get('username')
         user = User.objects.get(username=username)
         posts = Post.objects.select_related('user').filter().values(
-            'user__username', 'content', 'created_at'
+            'id', 'user__username', 'content', 'created_at'
         ).order_by('-created_at')
         print(posts)
         return JsonResponse(list(posts), safe=False)
+
+
+# @login_required
+@csrf_exempt
+@require_http_methods(["PUT"])
+def update_post(request, post_id):
+    try:
+        data = json.loads(request.body)
+        print(post_id)
+        content = data.get('content')
+        # postId = data.get('postId')
+        user = User.objects.get(username=data.get('user'))
+        post = Post.objects.get(id=post_id, user=user)
+        post.content = content
+        post.save()
+        return JsonResponse({'status': 'success', 'message': 'Post updated successfully.'}, status=200)
+    except Post.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Post not found.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+# @login_required
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_post(request, post_id):
+    try:
+        data = json.loads(request.body)
+        print(post_id)
+        user = User.objects.get(username=data.get('user'))
+        post = Post.objects.get(id=post_id, user=user)
+        post.delete()
+        return JsonResponse({'status': 'success', 'message': 'Post deleted successfully.'}, status=200)
+    except Post.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Post not found.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)

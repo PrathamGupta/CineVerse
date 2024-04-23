@@ -140,3 +140,13 @@
   color: #666;
   font-size: 0.8rem;
 }
+
+
+.editButton, .deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color : white; /* Adjust color as needed */
+  margin-left: 10px;
+  
+}
