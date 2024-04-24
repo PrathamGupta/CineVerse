@@ -129,18 +129,67 @@ def delete_post(request, post_id):
 
 
 
-@login_required
-def get_user_profile(request, user_id):
+# @login_required
+@require_http_methods(["GET"])
+@csrf_exempt
+def get_user_profile(request, user_name):
     try:
-        user = User.objects.get(pk=user_id)
-        # watched_movies_count = user.watched_movies.count()
+        user = User.objects.get(username=user_name)
+        watched_movies_count = user.watched_movies.count()
         followers_count = user.followers.count()  # Assuming 'followers' is the related name for followers in Follow model
         following_count = user.following.count()  # Assuming 'following' is the related name for whom the user is following
+        print(followers_count, following_count)
         return JsonResponse({
             'username': user.username,
-            # 'watched_movies_count': watched_movies_count,
+            'watched_movies_count': watched_movies_count,
             'followers_count': followers_count,
             'following_count': following_count,
         }, safe=False)
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
+    
+# @login_required
+@require_http_methods(["POST"])
+@csrf_exempt
+def follow_user(request, user_name):
+    try:
+        data = json.loads(request.body)
+        user_to_follow = User.objects.get(username=user_name)
+        user_following = User.objects.get(username = data.get('user_following'))
+        if request.user == user_to_follow:
+            return JsonResponse({'status': 'error', 'message': "You cannot follow yourself."}, status=400)
+        
+        Follow.objects.get_or_create(follower=user_following, followed=user_to_follow)
+        return JsonResponse({'status': 'success', 'message': 'Successfully followed the user.'})
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found.'}, status=404)
+    
+@require_http_methods(["DELETE"])
+@csrf_exempt
+def unfollow_user(request, user_name):
+    try:
+        data = json.loads(request.body)
+        user_to_unfollow = User.objects.get(username=user_name)
+        user_unfollowing = User.objects.get(username = data.get('user_following'))
+        follow_relationship = Follow.objects.filter(follower=user_unfollowing, followed=user_to_unfollow)
+        follow_relationship.delete()
+        return JsonResponse({'status': 'success', 'message': 'Successfully unfollowed the user.'})
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found.'}, status=404)
+    
+# @login_required
+@require_http_methods(["GET"])
+@csrf_exempt
+def check_follow_status(request,user_follow, user_check):
+    try:
+        # print(request.user)
+        # data = json.loads(request.body)
+        user_to_check = User.objects.get(username=user_check)
+        user_following = User.objects.get(username=user_follow)
+        is_following = Follow.objects.filter(follower=user_following, followed=user_to_check).exists()
+        return JsonResponse({'status': 'success', 'isFollowing': is_following})
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found.'}, status=404)

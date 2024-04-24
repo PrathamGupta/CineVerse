@@ -60,6 +60,11 @@
   /* Add styles for a profile icon here */
 }
 
+.postLink {
+  text-decoration: none;
+  color: white;
+}
+
 .main-container {
   width: calc(100% - 40px); /* Example: full width minus padding */
   max-width: 800px; /* or however wide you'd like it to be */

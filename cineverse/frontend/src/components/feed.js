@@ -91,7 +91,7 @@ const Feed = () => {
             <Link to="/lists">Lists</Link>
             <Link to="/members">Members</Link>
             <Link to="/journal">Journal</Link>
-            <Link to="/profile" className={classes.profileIcon}>
+            <Link to={`/profile/${user.username}`}  className={classes.profileIcon}>
               <img src={user?.profilePicture || require('../components/images/Default_pfp.svg.png')} alt="Profile" />
             </Link>
           </nav>
@@ -113,7 +113,7 @@ const Feed = () => {
           {posts.map((post) => (
             <div key={post.id} className={classes["post"]}>
               <div className={classes["post-header"]}>
-                <strong>{post.user__username}</strong>
+                <strong><Link to={`/profile/${post.user__username}`} className = {classes.postLink}>{post.user__username}</Link></strong>
                 <span className={classes.postDateTime}>{new Date(post.created_at).toLocaleString()}</span>
                 {post.user__username === user.username && (
                 <>

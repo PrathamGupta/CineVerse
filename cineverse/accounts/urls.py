@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import CreatePostView, UserPostsView, get_user_profile
+from .views import follow_user, unfollow_user, check_follow_status
 
 urlpatterns = [
     path("register/", views.signup, name="register"),
@@ -14,5 +15,8 @@ urlpatterns = [
     path('user_posts/', UserPostsView.as_view(), name='user_posts'),
     path('update_post/<int:post_id>/', views.update_post, name='update_post'),
     path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
-    path('user/<int:user_id>/profile/', get_user_profile, name='user_profile'),
+    path('user/<str:user_name>/profile/', get_user_profile, name='user_profile'),
+    path('user/follow/<str:user_name>/', follow_user, name='follow_user'),
+    path('user/unfollow/<str:user_name>/', unfollow_user, name='unfollow_user'),
+    path('user/follow_status/<str:user_follow>/<str:user_check>/', check_follow_status, name='check_follow_status'),
 ]

@@ -22,6 +22,7 @@ const SignIn = () => {
         const response = await fetch('http://localhost:8000/accounts/login/', {
             method: 'POST',
             body: formData,
+            // credentials: 'include'
         });
 
         if (response.ok) {

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import classes from './Profile.module.css';
 import UserContext from '../userContext';
 import { useFavorites } from './FavoritesContext';
@@ -47,8 +47,10 @@ const settings = {
 
 const Profile = () => {
     const { user, logout } = useContext(UserContext);
+    const { username } = useParams();
     const [images, setImages] = useState([]); // State to store image URLs
     const { favorites } = useFavorites(); // Use favorites from the context
+    const [isFollowing, setIsFollowing] = useState(false);
     const [profileData, setProfileData] = useState({
         watched_movies_count: 0,
         followers_count: 0,
@@ -89,12 +91,13 @@ const Profile = () => {
 
         fetchMoviesAndImages();
     }, []);
-
     
-
     const fetchProfileData = async () => {
         // Replace the URL with your actual endpoint that fetches profile stats
-        const response = await fetch(`http://localhost:8000/user/${user.id}/profile/`);
+        const response = await fetch(`http://localhost:8000/accounts/user/${username}/profile/`, {
+            method: 'GET',
+            // body: JSON.stringify(fetchStatusData)
+        });
         if (response.ok) {
             const data = await response.json();
             setProfileData({
@@ -107,12 +110,51 @@ const Profile = () => {
         }
     };
 
+    useEffect(() => {
+        fetchProfileData();
+    }, [username]);
+    
+
     const handleLogout = (event) => {
         event.preventDefault();
         logout();
     };
-    
-    
+
+    useEffect(() => {
+        const fetchFollowStatus = async () => {
+            let fetchStatusData = {user_following: user.username}
+            if (user && username !== user.username) {
+                const response = await fetch(`http://localhost:8000/accounts/user/follow_status/${user.username}/${username}/`, {
+                    method: 'GET',
+                    // body: JSON.stringify(fetchStatusData)
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setIsFollowing(data.isFollowing);
+                    console.log("user following:", data.isFollowing)
+                }
+            }
+        };
+
+        fetchFollowStatus();
+    }, [username, user]);
+
+    const toggleFollow = async () => {
+        let toggleFollowData = {user_following: user.username}
+        const endpoint = isFollowing ? 'unfollow' : 'follow';
+        const response = await fetch(`http://localhost:8000/accounts/user/${endpoint}/${username}/`, {
+            method: isFollowing ? 'DELETE' : 'POST',  // Use POST for both follow and unfollow for simplicity
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(toggleFollowData)
+        });
+        if (response.ok) {
+            setIsFollowing(!isFollowing);
+            fetchProfileData();
+        } else {
+            console.error("Failed to toggle follow status.");
+        }
+    };
+       
 
     return (
         <div className={classes.bodyContainer}>
@@ -126,6 +168,11 @@ const Profile = () => {
                         <Link to="/journal">Journal</Link>
                         <Link to="/" onClick={handleLogout} className="cta">Logout</Link>
                     </nav>
+                    {user && user.username !== username && (
+                        <button onClick={toggleFollow} className={classes["follow-button"]}>
+                            {isFollowing ? 'Unfollow' : 'Follow'}
+                        </button>
+                    )}
                 </header>
             </div>
 
@@ -134,15 +181,17 @@ const Profile = () => {
                     <div className={classes["profile-info-container"]}>
                         <div className={classes["user-image"]}></div>
                         <div>
-                            <h2>{user ? user.username : 'Loading...'}</h2>
+                            <h2>{username}</h2>
                         </div>
-                        <button>Edit Profile</button>
+                        {user && user.username === username && (
+                            <button>Edit Profile</button>
+                        )}
                     </div>
 
                     <div className={classes["stat-container"]}>
                     <span className={classes["stat"]}>{profileData.watched_movies_count} <br />Films</span>
-                    <span className={classes["stat"]}>{profileData.followers_count} <br />Following</span>
-                    <span className={classes["stat"]}>{profileData.following_count} <br />Followers</span>
+                    <span className={classes["stat"]}>{profileData.following_count} <br />Following</span>
+                    <span className={classes["stat"]}>{profileData.followers_count} <br />Followers</span>
                     </div>
                 </div>
 
