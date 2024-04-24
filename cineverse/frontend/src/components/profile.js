@@ -49,6 +49,11 @@ const Profile = () => {
     const { user, logout } = useContext(UserContext);
     const [images, setImages] = useState([]); // State to store image URLs
     const { favorites } = useFavorites(); // Use favorites from the context
+    const [profileData, setProfileData] = useState({
+        watched_movies_count: 0,
+        followers_count: 0,
+        following_count: 0
+    }); // State to store profile statistics
 
     const API_KEY = '720e3633927ed61a55ede58d3a1b033d'; // Replace with your actual API key
     const baseUrl = 'https://image.tmdb.org/t/p/';
@@ -85,10 +90,28 @@ const Profile = () => {
         fetchMoviesAndImages();
     }, []);
 
+    
+
+    const fetchProfileData = async () => {
+        // Replace the URL with your actual endpoint that fetches profile stats
+        const response = await fetch(`http://localhost:8000/user/${user.id}/profile/`);
+        if (response.ok) {
+            const data = await response.json();
+            setProfileData({
+                watched_movies_count: data.watched_movies_count,
+                followers_count: data.followers_count,
+                following_count: data.following_count
+            });
+        } else {
+            console.error('Failed to fetch profile data');
+        }
+    };
+
     const handleLogout = (event) => {
         event.preventDefault();
         logout();
     };
+    
     
 
     return (
@@ -117,9 +140,9 @@ const Profile = () => {
                     </div>
 
                     <div className={classes["stat-container"]}>
-                        <span className={classes["stat"]}>0 <br />Films</span>
-                        <span className={classes["stat"]}>0 <br />Following</span>
-                        <span className={classes["stat"]}>0 <br />Followers</span>
+                    <span className={classes["stat"]}>{profileData.watched_movies_count} <br />Films</span>
+                    <span className={classes["stat"]}>{profileData.followers_count} <br />Following</span>
+                    <span className={classes["stat"]}>{profileData.following_count} <br />Followers</span>
                     </div>
                 </div>
 

@@ -5,13 +5,14 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.utils.decorators import method_decorator
-from .models import Post, User
+from .models import Post, User, Movie, Follow
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView, DeleteView
+from .models import User, Post, Follow, Movie
 
 def logout_view(request):
     logout(request)
@@ -125,3 +126,21 @@ def delete_post(request, post_id):
         return JsonResponse({'status': 'error', 'message': 'Post not found.'}, status=404)
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
+
+@login_required
+def get_user_profile(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+        # watched_movies_count = user.watched_movies.count()
+        followers_count = user.followers.count()  # Assuming 'followers' is the related name for followers in Follow model
+        following_count = user.following.count()  # Assuming 'following' is the related name for whom the user is following
+        return JsonResponse({
+            'username': user.username,
+            # 'watched_movies_count': watched_movies_count,
+            'followers_count': followers_count,
+            'following_count': following_count,
+        }, safe=False)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)

@@ -15,6 +15,7 @@ class Movie(models.Model):
     director = models.CharField(max_length=100, blank=True)
     cast = models.TextField(blank=True)
     synopsis = models.TextField(blank=True)
+    watched_by = models.ManyToManyField(User, related_name='watched_movies') 
 
 class TVShow(models.Model):
     title = models.CharField(max_length=100)
@@ -60,4 +61,13 @@ class Message(models.Model):
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Follow(models.Model):
+    follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    followed = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('follower', 'followed')  # Ensure unique follow relationships
 
