@@ -15,7 +15,7 @@ class Movie(models.Model):
     director = models.CharField(max_length=100, blank=True)
     cast = models.TextField(blank=True)
     synopsis = models.TextField(blank=True)
-    watched_by = models.ManyToManyField(User, related_name='watched_movies') 
+    # watched_by = models.ManyToManyField(User, related_name='watched_movies') 
 
 class TVShow(models.Model):
     title = models.CharField(max_length=100)
@@ -71,3 +71,10 @@ class Follow(models.Model):
     class Meta:
         unique_together = ('follower', 'followed')  # Ensure unique follow relationships
 
+class FavoriteMovie(models.Model):
+    user = models.ForeignKey(User, related_name='favorite_movies', on_delete=models.CASCADE)
+    tmdb_id = models.IntegerField()  # Store the TMDB movie ID
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'tmdb_id')  # Prevent duplicate entries

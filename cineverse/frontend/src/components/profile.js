@@ -49,7 +49,8 @@ const Profile = () => {
     const { user, logout } = useContext(UserContext);
     const { username } = useParams();
     const [images, setImages] = useState([]); // State to store image URLs
-    const { favorites } = useFavorites(); // Use favorites from the context
+    // const { favorites } = useFavorites(); // Use favorites from the context
+    const [favorites, setFavorites] = useState([]);
     const [isFollowing, setIsFollowing] = useState(false);
     const [profileData, setProfileData] = useState({
         watched_movies_count: 0,
@@ -64,12 +65,12 @@ const Profile = () => {
     // Fetches images for movies when component mounts
     useEffect(() => {
         const fetchMoviesAndImages = async () => {
-            const moviesUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}`;
+            const moviesUrl = `http://localhost:8000/accounts/api/movies/`;
             try {
                 const moviesResponse = await fetch(moviesUrl);
                 const moviesData = await moviesResponse.json();
                 const movieIds = moviesData.results.map(movie => movie.id);
-
+    
                 // Fetch images for each movie ID
                 movieIds.forEach(id => fetchImagesForMovie(id));
             } catch (error) {
@@ -78,7 +79,7 @@ const Profile = () => {
         };
 
         const fetchImagesForMovie = async (movieId) => {
-            const imagesUrl = `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${API_KEY}`;
+            const imagesUrl = `http://localhost:8000/accounts/api/movies/${movieId}/images/`;
             try {
                 const imagesResponse = await fetch(imagesUrl);
                 const imagesData = await imagesResponse.json();
@@ -124,8 +125,9 @@ const Profile = () => {
         const fetchFollowStatus = async () => {
             let fetchStatusData = {user_following: user.username}
             if (user && username !== user.username) {
-                const response = await fetch(`http://localhost:8000/accounts/user/follow_status/${user.username}/${username}/`, {
+                const response = await fetch(`http://localhost:8000/accounts/user/follow_status/${username}/`, {
                     method: 'GET',
+                    headers: {'Authorization': `Bearer ${localStorage.getItem('access')}`}
                     // body: JSON.stringify(fetchStatusData)
                 });
                 if (response.ok) {
@@ -140,12 +142,13 @@ const Profile = () => {
     }, [username, user]);
 
     const toggleFollow = async () => {
-        let toggleFollowData = {user_following: user.username}
+        // let toggleFollowData = {user_following: user.username}
         const endpoint = isFollowing ? 'unfollow' : 'follow';
         const response = await fetch(`http://localhost:8000/accounts/user/${endpoint}/${username}/`, {
             method: isFollowing ? 'DELETE' : 'POST',  // Use POST for both follow and unfollow for simplicity
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(toggleFollowData)
+            headers: { 'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${localStorage.getItem('access')}` },
+            // body: JSON.stringify(toggleFollowData)
         });
         if (response.ok) {
             setIsFollowing(!isFollowing);
@@ -154,6 +157,26 @@ const Profile = () => {
             console.error("Failed to toggle follow status.");
         }
     };
+
+    useEffect(() => {
+        const fetchFavoriteMovies = async () => {
+            const url = `http://localhost:8000/accounts/api/favorites/`;
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access')}`,
+                    },
+                });
+                if (!response.ok) throw new Error('Failed to fetch favorite movies');
+                const moviesData = await response.json();
+                setFavorites(moviesData);
+            } catch (error) {
+                console.error('Error fetching favorite movies:', error);
+            }
+        };
+    
+        fetchFavoriteMovies();
+    }, [user]);
        
 
     return (
@@ -215,21 +238,17 @@ const Profile = () => {
                     <section className={classes["favorite-films"]}>
                         <h2>Favorite Films</h2>
                         {favorites.length > 0 ? (
-                            
-                            
-                                <Slider {...settings}>
-                                {favorites.map((movie, index) => (
-                                    <div key={index} className={classes["film"]}>
-                                        <Link to={`/movie/${movie.id}`}> {/* Add Link component here */}
+                        <Slider {...settings}>
+                            {favorites.map((movie, index) => (
+                                <div key={index} className={classes["film"]}>
+                                    <Link to={`/movie/${movie.id}`}> {/* Add Link component here */}
                                         <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className={classes["movieImage"]}/>
                                         <h3>{movie.title}</h3>
-                                        </Link>
-                                    </div>
-                                ))}
-                              </Slider>  
-                            
-                            
-                        ) : <p>Don't forget to select your favorite films!</p>}
+                                    </Link>
+                                </div>
+                            ))}
+                        </Slider>
+                    ) : <p>Don't forget to select your favorite films!</p>}
                     </section>
 
                     <section className={classes["recent-activity"]}>

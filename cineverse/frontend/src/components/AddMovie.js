@@ -14,24 +14,44 @@ const AddMovie = () => {
             alert('Please enter a search term.');
             return;
         }
-        const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(searchTerm)}`;
+        const url = `http://localhost:8000/accounts/api/search_movies/?query=${encodeURIComponent(searchTerm)}`;
         try {
             const response = await fetch(url);
             const data = await response.json();
-            setSearchResults(data.results);
+            if (response.ok) {
+                setSearchResults(data);  // Assuming the backend sends back just the array of results
+            } else {
+                throw new Error(data.error || 'Failed to fetch search results');
+            }
         } catch (error) {
-            console.error('Error fetching search results:', error);
+            console.error('Error fetching search results:', error.message);
         }
     };
-
+    
     const handleSearchSubmit = (event) => {
         event.preventDefault();  // Prevent the form from causing a page reload
         fetchSearchResults();
     };
 
-    const handleAddToFavorites = (movie) => {
-        addFavorite(movie);  // Use the context's addFavorite function
-        alert('Added to favorites!');
+    const handleAddToFavorites = async (movie) => {
+        try {
+            const response = await fetch('http://localhost:8000/accounts/user/add_favorite/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access')}`  // Ensure the token is sent
+                },
+                body: JSON.stringify({ tmdb_id: movie.id })
+            });
+            if (response.ok) {
+                alert('Added to favorites!');
+                addFavorite(movie);  // Optionally update local state/context
+            } else {
+                alert('Failed to add to favorites');
+            }
+        } catch (error) {
+            console.error('Error adding favorite:', error);
+        }
     };
 
     return (

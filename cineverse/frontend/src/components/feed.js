@@ -19,6 +19,7 @@ const Feed = () => {
             const data = await response.json();
             setPosts(data);
             console.log("Post data: ", posts)
+            console.log("User: ", user)
         } else {
             console.error('Failed to fetch posts');
         }
@@ -40,12 +41,15 @@ const Feed = () => {
         if (editing) {
             url = `http://localhost:8000/accounts/update_post/${editPostId}/`;
             method = 'PUT';
-            postData = { content: postContent, user: user.username };
+            postData = { content: postContent  };
         }
+
+        // console.log("accessToken:", localStorage.getItem('access'))
 
         const response = await fetch(url, {
             method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${localStorage.getItem('access')}` },
             body: JSON.stringify(postData),
         });
 
@@ -67,10 +71,11 @@ const Feed = () => {
     };
 
     const handleDelete = async (postId) => {
-        let deletePostData = {user: user.username}
+        // let deletePostData = {user: user.username}
         const response = await fetch(`http://localhost:8000/accounts/delete_post/${postId}/`, {
             method: 'DELETE',
-            body: JSON.stringify(deletePostData)
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('access')}`},
+            // body: JSON.stringify(deletePostData)
         });
 
         if (response.ok) {
