@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import requests
 from django.utils.decorators import method_decorator
-from .models import Post, User, Follow, FavoriteMovie
+from .models import Post, User, Follow, FavoriteMovie, WatchedMovie, WatchlistMovie
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.forms.models import model_to_dict
@@ -42,27 +42,14 @@ def fetch_movie_images(request, movie_id):
     except requests.RequestException as e:
         return JsonResponse({'error': str(e)}, status=502)
     
-@api_view(['POST'])
+
+
+# @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def add_favorite(request):
-    tmdb_id = request.data.get('tmdb_id')
-    user = request.user
-    FavoriteMovie.objects.get_or_create(user=user, tmdb_id=tmdb_id)
-    return JsonResponse({'status': 'success'}, status=201)
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def remove_favorite(request, tmdb_id):
-    user = request.user
-    FavoriteMovie.objects.filter(user=user, tmdb_id=tmdb_id).delete()
-    return Response({'status': 'removed'}, status=204)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def list_favorites(request):
-    user = request.user
-    favorites = FavoriteMovie.objects.filter(user=user).values_list('tmdb_id', flat=True)
-    return Response(favorites, status=200)
+# def list_favorites(request, user_name):
+#     user = user_name
+#     favorites = FavoriteMovie.objects.filter(user=user).values_list('tmdb_id', flat=True)
+#     return Response(favorites, status=200)
 
 @require_http_methods(["GET"])
 def search_movies(request):
@@ -81,22 +68,6 @@ def search_movies(request):
     except requests.RequestException as e:
         return JsonResponse({'error': str(e)}, status=500)
     
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def fetch_favorite_movies(request):
-    user = request.user
-    favorite_movies = FavoriteMovie.objects.filter(user=user)
-    tmdb_ids = [movie.tmdb_id for movie in favorite_movies]
-    
-    movies_details = []
-    for tmdb_id in tmdb_ids:
-        url = f'https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={API_KEY}'
-        response = requests.get(url)
-        if response.status_code == 200:
-            movies_details.append(response.json())
-    
-    return JsonResponse(movies_details, safe=False)
-
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -166,9 +137,10 @@ class CreatePostView(APIView):
             data = json.loads(request.body)
             content = data.get('content')
             user = User.objects.get(username=request.user)
+            tmdb_id = data.get('tmdb_id', None)
             print(request.user)
             if content:
-                post = Post.objects.create(user=user, content=content)
+                post = Post.objects.create(user=user, content=content, tmdb_id=tmdb_id)
                 # Use model_to_dict to convert the post object to a dictionary
                 post_dict = model_to_dict(post)
                 # Add the username to the dictionary
@@ -188,10 +160,24 @@ class UserPostsView(View):
         username = request.GET.get('username')
         user = User.objects.get(username=username)
         posts = Post.objects.select_related('user').filter().values(
-            'id', 'user__username', 'content', 'created_at'
+            'id', 'user__username', 'content', 'tmdb_id', 'created_at'
         ).order_by('-created_at')
-        print(posts)
-        return JsonResponse(list(posts), safe=False)
+
+        # print(posts)
+
+        enriched_posts = []
+        for post in posts:
+            if post['tmdb_id']:
+                response = requests.get(f'https://api.themoviedb.org/3/movie/{post["tmdb_id"]}?api_key={API_KEY}')
+                if response.status_code == 200:
+                    movie_details = response.json()
+                    post['movie_title'] = movie_details.get('title')
+                    post['movie_poster'] = f"https://image.tmdb.org/t/p/w500{movie_details.get('poster_path', '')}"
+            enriched_posts.append(post)
+
+        print(enriched_posts)
+        # return JsonResponse(list(posts), safe=False)
+        return JsonResponse(enriched_posts, safe=False)
 
 
 # @login_required
@@ -240,13 +226,13 @@ def delete_post(request, post_id):
 def get_user_profile(request, user_name):
     try:
         user = User.objects.get(username=user_name)
-        # watched_movies_count = user.watched_movies.count()
+        watched_movies_count = user.watched_movies.count()
         followers_count = user.followers.count()  # Assuming 'followers' is the related name for followers in Follow model
         following_count = user.following.count()  # Assuming 'following' is the related name for whom the user is following
         print(followers_count, following_count)
         return JsonResponse({
             'username': user.username,
-            'watched_movies_count': 0,
+            'watched_movies_count': watched_movies_count,
             'followers_count': followers_count,
             'following_count': following_count,
         }, safe=False)
@@ -301,3 +287,112 @@ def check_follow_status(request, user_check):
 
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'User not found.'}, status=404)
+    
+@csrf_exempt
+def get_movie_posts(request, tmdb_id):
+    # posts = Post.objects.filter(tmdb_id=tmdb_id).values()
+    posts = Post.objects.select_related('user').filter(tmdb_id=tmdb_id).values(
+            'id', 'user__username', 'content', 'tmdb_id', 'created_at'
+        ).order_by('-created_at')
+    print(posts)
+    return JsonResponse(list(posts), safe=False)
+
+# Favorite Movies
+@api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+def add_favorite(request):
+    tmdb_id = request.data.get('tmdb_id')
+    user = request.user
+    FavoriteMovie.objects.get_or_create(user=user, tmdb_id=tmdb_id)
+    WatchedMovie.objects.get_or_create(user=user, tmdb_id=tmdb_id)
+    return JsonResponse({'status': 'success'}, status=201)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_favorite(request, tmdb_id):
+    user = request.user
+    FavoriteMovie.objects.filter(user=user, tmdb_id=tmdb_id).delete()
+    return Response({'status': 'removed'}, status=204)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def fetch_favorite_movies(request, user_name):
+    user = User.objects.get(username=user_name)
+    # user = request.user
+    favorite_movies = FavoriteMovie.objects.filter(user=user)
+    tmdb_ids = [movie.tmdb_id for movie in favorite_movies]
+    
+    movies_details = []
+    for tmdb_id in tmdb_ids:
+        url = f'https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={API_KEY}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            movies_details.append(response.json())
+    
+    return JsonResponse(movies_details, safe=False)
+
+#Watched Movies
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_watched_movie(request):
+    tmdb_id = request.data.get('tmdb_id')
+    user = request.user
+    WatchedMovie.objects.get_or_create(user=user, tmdb_id=tmdb_id)
+    return JsonResponse({'status': 'success'}, status=201)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_watched_movie(request, tmdb_id):
+    user = request.user
+    WatchedMovie.objects.filter(user=user, tmdb_id=tmdb_id).delete()
+    return JsonResponse({'status': 'removed'}, status=204)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def fetch_watched_movies(request, user_name):
+    user = User.objects.get(username=user_name)
+    watched_movies = WatchedMovie.objects.filter(user=user)
+    tmdb_ids = [movie.tmdb_id for movie in watched_movies]
+    
+    movies_details = []
+    for tmdb_id in tmdb_ids:
+        url = f'https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={API_KEY}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            movies_details.append(response.json())
+    
+    return JsonResponse(movies_details, safe=False)
+
+#Watchlist Movies
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_to_watchlist(request):
+    tmdb_id = request.data.get('tmdb_id')
+    user = request.user
+    WatchlistMovie.objects.get_or_create(user=user, tmdb_id=tmdb_id)
+    return JsonResponse({'status': 'success'}, status=201)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_from_watchlist(request, tmdb_id):
+    user = request.user
+    WatchlistMovie.objects.filter(user=user, tmdb_id=tmdb_id).delete()
+    return JsonResponse({'status': 'removed'}, status=204)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def fetch_watchlist_movies(request, user_name):
+    user = User.objects.get(username=user_name)
+    watchlist_movies = WatchlistMovie.objects.filter(user=user)
+    tmdb_ids = [movie.tmdb_id for movie in watchlist_movies]
+    
+    movies_details = []
+    for tmdb_id in tmdb_ids:
+        url = f'https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={API_KEY}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            movies_details.append(response.json())
+    
+    return JsonResponse(movies_details, safe=False)

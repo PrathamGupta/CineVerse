@@ -1,90 +1,100 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import classes from './Feed.module.css';
-import UserContext from '../userContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
-
+import React, { useContext, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import classes from "./Feed.module.css";
+import UserContext from "../userContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useFavorites } from "./FavoritesContext";
+import { useMovie } from "../MovieContext";
 
 const Feed = () => {
-    const { user } = useContext(UserContext);
-    const [postContent, setPostContent] = useState('');
-    const [editing, setEditing] = useState(false);
-    const [editPostId, setEditPostId] = useState(null);
-    const [posts, setPosts] = useState([]);
+  const { user } = useContext(UserContext);
+  const [postContent, setPostContent] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editPostId, setEditPostId] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const { selectedMovie } = useMovie();
+  const { clearSelectedMovie } = useMovie();
 
-    const fetchPosts = async () => {
-        const response = await fetch(`http://localhost:8000/accounts/user_posts/?username=${user.username}`);
-        if (response.ok) {
-            const data = await response.json();
-            setPosts(data);
-            console.log("Post data: ", posts)
-            console.log("User: ", user)
-        } else {
-            console.error('Failed to fetch posts');
-        }
-    };
+  const fetchPosts = async () => {
+    const response = await fetch(
+      `http://localhost:8000/accounts/user_posts/?username=${user.username}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      setPosts(data);
+      console.log("Post data: ", posts);
+      console.log("User: ", user);
+    } else {
+      console.error("Failed to fetch posts");
+    }
+  };
 
-    // Fetch posts when the component mounts
-    useEffect(() => {
-        fetchPosts();
-    }, [user.username]);
+  // Fetch posts when the component mounts
+  useEffect(() => {
+    fetchPosts();
+  }, [user.username]);
 
-    // Handle post creation or update
-    const handlePostSubmit = async (e) => {
-        e.preventDefault();
-        console.log("Submitting for post ID: ", editPostId); 
-        let url = 'http://localhost:8000/accounts/create_post/';
-        let method = 'POST';
-        let postData = { content: postContent, user: user.username };
+  // Handle post creation or update
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Submitting for post ID: ", editPostId);
+    let url = "http://localhost:8000/accounts/create_post/";
+    let method = "POST";
+    let postData = { content: postContent, user: user.username, tmdb_id: selectedMovie?.id };
 
-        if (editing) {
-            url = `http://localhost:8000/accounts/update_post/${editPostId}/`;
-            method = 'PUT';
-            postData = { content: postContent  };
-        }
+    if (editing) {
+      url = `http://localhost:8000/accounts/update_post/${editPostId}/`;
+      method = "PUT";
+      postData = { content: postContent };
+    }
 
-        // console.log("accessToken:", localStorage.getItem('access'))
+    // console.log("accessToken:", localStorage.getItem('access'))
 
-        const response = await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json', 
-            'Authorization': `Bearer ${localStorage.getItem('access')}` },
-            body: JSON.stringify(postData),
-        });
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+      body: JSON.stringify(postData),
+    });
 
-        if (response.ok) {
-            await fetchPosts(); // Refresh posts
-            setPostContent('');
-            setEditing(false);
-            setEditPostId(null);
-        } else {
-            console.error('Failed to save post');
-        }
-    };
+    if (response.ok) {
+      await fetchPosts(); // Refresh posts
+      setPostContent("");
+      setEditing(false);
+      setEditPostId(null);
+      clearSelectedMovie();
+    } else {
+      console.error("Failed to save post");
+    }
+  };
 
-    const handleEdit = (post) => {
-        console.log("Editing post ID: ", post.id);
-        setEditing(true);
-        setEditPostId(post.id);
-        setPostContent(post.content);
-    };
+  const handleEdit = (post) => {
+    console.log("Editing post ID: ", post.id);
+    setEditing(true);
+    setEditPostId(post.id);
+    setPostContent(post.content);
+  };
 
-    const handleDelete = async (postId) => {
-        // let deletePostData = {user: user.username}
-        const response = await fetch(`http://localhost:8000/accounts/delete_post/${postId}/`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('access')}`},
-            // body: JSON.stringify(deletePostData)
-        });
+  const handleDelete = async (postId) => {
+    // let deletePostData = {user: user.username}
+    const response = await fetch(
+      `http://localhost:8000/accounts/delete_post/${postId}/`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+        // body: JSON.stringify(deletePostData)
+      }
+    );
 
-        if (response.ok) {
-           await fetchPosts(); // Refresh posts
-        } else {
-            console.error('Failed to delete post');
-        }
-    };
-  
+    if (response.ok) {
+      await fetchPosts(); // Refresh posts
+    } else {
+      console.error("Failed to delete post");
+    }
+  };
 
   return (
     <div className={classes.bodyContainer}>
@@ -96,43 +106,99 @@ const Feed = () => {
             <Link to="/lists">Lists</Link>
             <Link to="/members">Members</Link>
             <Link to="/journal">Journal</Link>
-            <Link to={`/profile/${user.username}`}  className={classes.profileIcon}>
-              <img src={user?.profilePicture || require('../components/images/Default_pfp.svg.png')} alt="Profile" />
+            <Link
+              to={`/profile/${user.username}`}
+              className={classes.profileIcon}
+            >
+              <img
+                src={
+                  user?.profilePicture ||
+                  require("../components/images/Default_pfp.svg.png")
+                }
+                alt="Profile"
+              />
             </Link>
           </nav>
         </header>
       </div>
       <main className={classes["main-container"]}>
         <form className={classes.postCreationForm} onSubmit={handlePostSubmit}>
-          <textarea
-            className={classes.postTextArea}
-            placeholder="What's happening?"
-            value={postContent}
-            onChange={(e) => setPostContent(e.target.value)}
-          />
+          <div className={classes.formSubContainer}>
+            <div className={classes.moviePreview}>
+              {selectedMovie && (
+                <div>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}
+                    alt={selectedMovie.title}
+                  />
+                  <p>{selectedMovie.title}</p>
+                </div>
+              )}
+              <textarea
+                className={classes.postTextArea}
+                placeholder="What's happening?"
+                value={postContent}
+                onChange={(e) => setPostContent(e.target.value)}
+              />
+            </div>
+            <div className={classes["add-movie-link"]}>
+              <Link to="/post-movie" className={classes["plus-icon"]}>
+                +
+              </Link>
+            </div>
+          </div>
           <button type="submit" className={classes.postSubmitButton}>
-            {editing ? 'Update' : 'Post'}
+            {editing ? "Update" : "Post"}
           </button>
         </form>
+
         <div className={classes["feed-content"]}>
           {posts.map((post) => (
             <div key={post.id} className={classes["post"]}>
               <div className={classes["post-header"]}>
-                <strong><Link to={`/profile/${post.user__username}`} className = {classes.postLink}>{post.user__username}</Link></strong>
-                <span className={classes.postDateTime}>{new Date(post.created_at).toLocaleString()}</span>
+                <strong>
+                  <Link
+                    to={`/profile/${post.user__username}`}
+                    className={classes.postLink}
+                  >
+                    {post.user__username}
+                  </Link>
+                </strong>
+                <span className={classes.postDateTime}>
+                  {new Date(post.created_at).toLocaleString()}
+                </span>
                 {post.user__username === user.username && (
-                <>
-                    <button onClick={() => handleEdit(post)} className={classes.editButton}>
-                    <FontAwesomeIcon icon={faPencilAlt} />
+                  <>
+                    <button
+                      onClick={() => handleEdit(post)}
+                      className={classes.editButton}
+                    >
+                      <FontAwesomeIcon icon={faPencilAlt} />
                     </button>
-                    <button onClick={() => handleDelete(post.id)} className={classes.deleteButton}>
-                    <FontAwesomeIcon icon={faTrash} />
+                    <button
+                      onClick={() => handleDelete(post.id)}
+                      className={classes.deleteButton}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
-
-                </>
+                  </>
                 )}
               </div>
-              <p>{post.content}</p>
+              <div className={classes["post-content"]}>
+                {post.movie_poster && (
+                  <div className={classes["film"]}>
+                  <Link to={`/movie/${post.tmdb_id}`}> {/* Add Link component here */}
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${post.movie_poster}`}
+                    alt={post.movie_title}
+                    className={classes["movieImage"]}
+                  />
+                  </Link>
+                  </div>
+                )}
+                <p>{post.content}</p>
+                {/* {post.movie_title && <h3>{post.movie_title}</h3>} */}
+              </div>
             </div>
           ))}
         </div>

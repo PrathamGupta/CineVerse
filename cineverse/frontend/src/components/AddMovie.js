@@ -54,6 +54,48 @@ const AddMovie = () => {
         }
     };
 
+    const handleAddToWatched = async (movie) => {
+        try {
+            const response = await fetch('http://localhost:8000/accounts/user/add_watched_movie/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access')}`  // Ensure the token is sent
+                },
+                body: JSON.stringify({ tmdb_id: movie.id })
+            });
+            if (response.ok) {
+                alert('Added to Watched movies!');
+                // addFavorite(movie);  // Optionally update local state/context
+            } else {
+                alert('Failed to add to Watched movies');
+            }
+        } catch (error) {
+            console.error('Error adding watched movie:', error);
+        }
+    };
+
+    const handleAddToWatchlist = async (movie) => {
+        try {
+            const response = await fetch('http://localhost:8000/accounts/user/add_to_watchlist/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access')}`  // Ensure the token is sent
+                },
+                body: JSON.stringify({ tmdb_id: movie.id })
+            });
+            if (response.ok) {
+                alert('Added to Watchlist!');
+                // addFavorite(movie);  // Optionally update local state/context
+            } else {
+                alert('Failed to add to Watchlist');
+            }
+        } catch (error) {
+            console.error('Error adding to Watchlist:', error);
+        }
+    };
+
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Add Movie</h1>
@@ -74,6 +116,8 @@ const AddMovie = () => {
                         <h4 className={styles.movieTitle}>{movie.title}</h4>
                         <p className={styles.movieOverview}>{movie.overview}</p>
                         <button onClick={() => handleAddToFavorites(movie)} className={styles.addButton}>Add to Favorites</button>
+                        <button onClick={() => handleAddToWatched(movie)} className={styles.addButton}>Add to Watched movies</button>
+                        <button onClick={() => handleAddToWatchlist(movie)} className={styles.addButton}>Add to Watchlist</button>
                     </div>
                 ))}
             </div>

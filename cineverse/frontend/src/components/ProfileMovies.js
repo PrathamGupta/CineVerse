@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import classes from './Profile.module.css';
 import UserContext from '../userContext';
-import { useFavorites } from './FavoritesContext';
+// import { useFavorites } from './FavoritesContext';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
@@ -45,12 +45,13 @@ const settings = {
 };
 
 
-const Profile = () => {
+const ProfileMovies = () => {
     const { user, logout } = useContext(UserContext);
     const { username } = useParams();
     const [images, setImages] = useState([]); // State to store image URLs
     // const { favorites } = useFavorites(); // Use favorites from the context
-    const [favorites, setFavorites] = useState([]);
+    // const [favorites, setFavorites] = useState([]);
+    const [watched, setWatched] = useState([]);
     const [isFollowing, setIsFollowing] = useState(false);
     const [profileData, setProfileData] = useState({
         watched_movies_count: 0,
@@ -159,8 +160,8 @@ const Profile = () => {
     };
 
     useEffect(() => {
-        const fetchFavoriteMovies = async () => {
-            const url = `http://localhost:8000/accounts/api/favorites/${username}`;
+        const fetchWatchedMovies = async () => {
+            const url = `http://localhost:8000/accounts/user/watched_movies/${username}`;
             try {
                 const response = await fetch(url, {
                     headers: {
@@ -169,13 +170,13 @@ const Profile = () => {
                 });
                 if (!response.ok) throw new Error('Failed to fetch favorite movies');
                 const moviesData = await response.json();
-                setFavorites(moviesData);
+                setWatched(moviesData);
             } catch (error) {
                 console.error('Error fetching favorite movies:', error);
             }
         };
     
-        fetchFavoriteMovies();
+        fetchWatchedMovies();
     }, [user]);
        
 
@@ -236,21 +237,21 @@ const Profile = () => {
             <nav className={classes["profile-nav"]}>
               <ul className={classes["nav-list"]}>
                 <li>
-                  <Link to={`/profile/${username}`} className={classes.active}>
+                  <Link to={`/profile/${username}`} >
                     Overview
                   </Link>
                 </li>
                 <li>
-                  <Link to="films">Films</Link>
+                  <Link to={`/profile/${username}/films`} className={classes.active}>Films</Link>
                 </li>
                 <li>
-                  <Link to="posts">Posts</Link>
+                  <Link to={`/profile/${username}/posts`}>Posts</Link>
                 </li>
                 <li>
-                  <Link to="watchlist">Watchlist</Link>
+                  <Link to={`/profile/${username}/watchlist`}>Watchlist</Link>
                 </li>
                 <li>
-                  <Link to="likes">Likes</Link>
+                  <Link to={`/profile/${username}/likes`}>Likes</Link>
                 </li>
                 {/* <li><Link to="/tags">tags</Link></li> */}
               </ul>
@@ -264,10 +265,10 @@ const Profile = () => {
 
           <div className={classes["content-container"]}>
             <section className={classes["favorite-films"]}>
-              <h2>Favorite Films</h2>
-              {favorites.length > 0 ? (
+              <h2>Watched Films</h2>
+              {watched.length > 0 ? (
                 <Slider {...settings}>
-                  {favorites.map((movie, index) => (
+                  {watched.map((movie, index) => (
                     <div key={index} className={classes["film"]}>
                       <Link to={`/movie/${movie.id}`}>
                         {" "}
@@ -304,4 +305,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default ProfileMovies;

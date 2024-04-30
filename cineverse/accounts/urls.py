@@ -3,7 +3,8 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import CreatePostView, UserPostsView, get_user_profile
-from .views import follow_user, unfollow_user, check_follow_status, fetch_movies, fetch_movie_images, add_favorite, remove_favorite, list_favorites, search_movies, fetch_favorite_movies
+from .views import follow_user, unfollow_user, check_follow_status, fetch_movies, fetch_movie_images, add_favorite, remove_favorite, search_movies, fetch_favorite_movies, get_movie_posts
+from .views import add_watched_movie, remove_watched_movie, fetch_watched_movies, add_to_watchlist, remove_from_watchlist, fetch_watchlist_movies
 
 urlpatterns = [
     path("register/", views.signup, name="register"),
@@ -23,7 +24,18 @@ urlpatterns = [
     path('api/movies/<int:movie_id>/images/', fetch_movie_images, name='fetch_movie_images'),
     path('user/add_favorite/', add_favorite, name='add_favorite'),
     path('user/remove_favorite/<int:tmdb_id>/', remove_favorite, name='remove_favorite'),
-    path('user/list_favorites/', list_favorites, name='list_favorites'),
+    # path('user/list_favorites/', list_favorites, name='list_favorites'),
     path('api/search_movies/', search_movies, name='search_movies'),
-    path('api/favorites/', fetch_favorite_movies, name='fetch_favorites'),
+    path('api/favorites/<str:user_name>', fetch_favorite_movies, name='fetch_favorites'),
+    path('api/movie_posts/<int:tmdb_id>/', get_movie_posts, name='movie_posts'),
+    
+    # Watched Movie
+    path('user/add_watched_movie/', add_watched_movie, name='add_watched_movie'),
+    path('user/remove_watched_movie/<int:tmdb_id>/', remove_watched_movie, name='remove_watched_movie'),
+    path('user/watched_movies/<str:user_name>/', fetch_watched_movies, name='fetch_watched_movies'),
+
+    # Watchlist Movies
+    path('user/add_to_watchlist/', add_to_watchlist, name='add_to_watchlist'),
+    path('user/remove_from_watchlist/<int:tmdb_id>/', remove_from_watchlist, name='remove_from_watchlist'),
+    path('user/watchlist_movies/<str:user_name>/', fetch_watchlist_movies, name='fetch_watchlist_movies'),
 ]

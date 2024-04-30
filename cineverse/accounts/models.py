@@ -54,6 +54,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
     content = models.TextField()
+    tmdb_id = models.IntegerField(blank=True, null=True)  # Store the TMDB movie ID
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Message(models.Model):
@@ -78,3 +79,19 @@ class FavoriteMovie(models.Model):
 
     class Meta:
         unique_together = ('user', 'tmdb_id')  # Prevent duplicate entries
+
+class WatchedMovie(models.Model):
+    user = models.ForeignKey(User, related_name='watched_movies', on_delete=models.CASCADE)
+    tmdb_id = models.IntegerField()  # Store the TMDB movie ID
+    watched_on = models.DateTimeField(auto_now_add=True)  # Date when the user watched the movie
+
+    class Meta:
+        unique_together = ('user', 'tmdb_id')
+
+class WatchlistMovie(models.Model):
+    user = models.ForeignKey(User, related_name='watchlist_movies', on_delete=models.CASCADE)
+    tmdb_id = models.IntegerField()  # Store the TMDB movie ID
+    added_on = models.DateTimeField(auto_now_add=True)  # Date when the movie was added to the watchlist
+
+    class Meta:
+        unique_together = ('user', 'tmdb_id')

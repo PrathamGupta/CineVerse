@@ -7,6 +7,7 @@
   } */
 
   .bodyContainer {
+    min-height: 100vh;
     height: 100%;
     font-family: 'Arial', sans-serif;
     background-color: #20262E;
