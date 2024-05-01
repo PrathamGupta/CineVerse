@@ -58,29 +58,42 @@ const PostMovie = () => {
     };
 
     return (
+      <div className={styles.bodyContainer}>
         <div className={styles.container}>
-            <h1 className={styles.title}>Select Movie</h1>
-            <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search for movies..."
-                    className={styles.searchInput}
+          <h1 className={styles.title}>Select Movie</h1>
+          <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search for movies..."
+              className={styles.searchInput}
+            />
+            <button type="submit" className={styles.searchButton}>
+              Search
+            </button>
+          </form>
+          <div className={styles.results}>
+            {searchResults.map((movie) => (
+              <div key={movie.id} className={styles.resultItem}>
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className={styles.movieImage}
                 />
-                <button type="submit" className={styles.searchButton}>Search</button>
-            </form>
-            <div className={styles.results}>
-                {searchResults.map(movie => (
-                    <div key={movie.id} className={styles.resultItem}>
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className={styles.movieImage} />
-                        <h4 className={styles.movieTitle}>{movie.title}</h4>
-                        <p className={styles.movieOverview}>{movie.overview}</p>
-                        <button onClick={() => handleAddToPost(movie)} className={styles.addButton}>Post Movie</button>
-                    </div>
-                ))}
-            </div>
+                <h4 className={styles.movieTitle}>{movie.title}</h4>
+                <p className={styles.movieOverview}>{movie.overview}</p>
+                <button
+                  onClick={() => handleAddToPost(movie)}
+                  className={styles.addButton}
+                >
+                  Post Movie
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
     );
 };
 

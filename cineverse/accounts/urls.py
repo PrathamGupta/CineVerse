@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import CreatePostView, UserPostsView, get_user_profile
 from .views import follow_user, unfollow_user, check_follow_status, fetch_movies, fetch_movie_images, add_favorite, remove_favorite, search_movies, fetch_favorite_movies, get_movie_posts
-from .views import add_watched_movie, remove_watched_movie, fetch_watched_movies, add_to_watchlist, remove_from_watchlist, fetch_watchlist_movies, add_like, add_comment, remove_like, list_users
+from .views import add_watched_movie, remove_watched_movie, fetch_watched_movies, add_to_watchlist, remove_from_watchlist, fetch_watchlist_movies, add_like, add_comment, remove_like, list_users, get_user_posts, get_liked_posts
 
 urlpatterns = [
     path("register/", views.signup, name="register"),
@@ -13,7 +13,7 @@ urlpatterns = [
     path("signin/", views.signin, name="signin"),
     path("signup/", views.signup, name="signup"),
     path('create_post/', CreatePostView.as_view(), name='create_post'),
-    path('user_posts/', UserPostsView.as_view(), name='user_posts'),
+    path('get_posts/', UserPostsView.as_view(), name='user_posts'),
     path('update_post/<int:post_id>/', views.update_post, name='update_post'),
     path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
     path('user/<str:user_name>/profile/', get_user_profile, name='user_profile'),
@@ -28,6 +28,8 @@ urlpatterns = [
     path('api/search_movies/', search_movies, name='search_movies'),
     path('api/favorites/<str:user_name>', fetch_favorite_movies, name='fetch_favorites'),
     path('api/movie_posts/<int:tmdb_id>/', get_movie_posts, name='movie_posts'),
+    path('user/get_posts/', get_user_posts, name='get_user_posts'),
+    path('user/get_liked_posts/', get_liked_posts, name='get_liked_posts'),
     
     # Watched Movie
     path('user/add_watched_movie/', add_watched_movie, name='add_watched_movie'),

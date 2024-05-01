@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate} from 'react-router-dom';
 import classes from './Profile.module.css';
 import UserContext from '../userContext';
 // import { useFavorites } from './FavoritesContext';
@@ -58,6 +58,7 @@ const ProfileMovies = () => {
         followers_count: 0,
         following_count: 0
     }); // State to store profile statistics
+    const navigate = useNavigate();
 
     const API_KEY = '720e3633927ed61a55ede58d3a1b033d'; // Replace with your actual API key
     const baseUrl = 'https://image.tmdb.org/t/p/';
@@ -184,7 +185,7 @@ const ProfileMovies = () => {
       <div className={classes.bodyContainer}>
         <div className={classes["nav-container"]}>
           <header className={classes["profile-header"]}>
-            <div className={classes["logo"]}>CINEVERSE</div>
+          <div onClick={() => navigate("/feed")} className={classes["logo"]}>CINEVERSE</div>
             <nav>
               <Link to="/films">Films</Link>
               <Link to="/lists">Lists</Link>
