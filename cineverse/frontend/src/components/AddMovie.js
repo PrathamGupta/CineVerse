@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './AddMovie.module.css';  // Make sure the path is correct
 import { useFavorites } from './FavoritesContext';
+import classes from './Feed.module.css'
+import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../userContext";
+
 
 
 const AddMovie = () => {
@@ -8,6 +12,8 @@ const AddMovie = () => {
     const [searchResults, setSearchResults] = useState([]);
     const { addFavorite } = useFavorites(); 
     const API_KEY = '720e3633927ed61a55ede58d3a1b033d';  // Replace this with your actual TMDB API key
+    const { user } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const fetchSearchResults = async () => {
         if (searchTerm.trim() === '') {
@@ -98,8 +104,31 @@ const AddMovie = () => {
 
     return (
       <div className={styles.bodyContainer}>
+         <div className={classes["nav-container"]}>
+        <header className={classes["profile-header"]}>
+        <div onClick={() => navigate("/feed")} className={classes["logo"]}>CINEVERSE</div>
+          <nav>
+            <Link to={`/add-movie`}>Films</Link>
+            <Link to={`/profile/${user.username}/watchlist`}>Lists</Link>
+            <Link to="/members">Members</Link>
+            {/* <Link to="/journal">Journal</Link> */}
+            <Link
+              to={`/profile/${user.username}`}
+              className={classes.profileIcon}
+            >
+              <img
+                src={
+                  user?.profilePicture ||
+                  require("../components/images/Default_pfp.svg.png")
+                }
+                alt="Profile"
+              />
+            </Link>
+          </nav>
+        </header>
+      </div>
         <div className={styles.container}>
-          <h1 className={styles.title}>Add Movie</h1>
+          <h1 className={styles.title}>Search Movie</h1>
           <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
             <input
               type="text"

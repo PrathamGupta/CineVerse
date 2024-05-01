@@ -241,10 +241,10 @@ const ProfilePosts = () => {
           <header className={classes["profile-header"]}>
           <div onClick={() => navigate("/feed")} className={classes["logo"]}>CINEVERSE</div>
             <nav>
-              <Link to="/films">Films</Link>
-              <Link to="/lists">Lists</Link>
-              <Link to="/members">Members</Link>
-              <Link to="/journal">Journal</Link>
+            <Link to={`/add-movie`}>Films</Link>
+            <Link to={`/profile/${user.username}/watchlist`}>Lists</Link>
+            <Link to="/members">Members</Link>
+              {/* <Link to="/journal">Journal</Link> */}
               <Link to="/" onClick={handleLogout} className="cta">
                 Logout
               </Link>

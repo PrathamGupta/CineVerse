@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import classes from "./Feed.module.css";
+import styles from './AddMovie.module.css';
 import UserContext from "../userContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTrash, faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
@@ -143,16 +144,22 @@ const Feed = () => {
     }
   };
 
+  const handleKeyPress = (e, postId) => {
+    if (e.key === 'Enter') {
+      handleAddComment(postId);
+    }
+  }
+
   return (
     <div className={classes.bodyContainer}>
       <div className={classes["nav-container"]}>
         <header className={classes["profile-header"]}>
           <div className={classes["logo"]}>CINEVERSE</div>
           <nav>
-            <Link to="/films">Films</Link>
-            <Link to="/lists">Lists</Link>
+            <Link to={`/add-movie`}>Films</Link>
+            <Link to={`/profile/${user.username}/watchlist`}>Lists</Link>
             <Link to="/members">Members</Link>
-            <Link to="/journal">Journal</Link>
+            {/* <Link to="/journal">Journal</Link> */}
             <Link
               to={`/profile/${user.username}`}
               className={classes.profileIcon}
@@ -264,20 +271,29 @@ const Feed = () => {
                       {post.comments_count || 0}
                     </button>
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Add a comment..."
-                    value={currentComment}
-                    onChange={(e) => setCurrentComment(e.target.value)}
-                    className={classes.commentInput}
-                  />
-                  {post.comments &&
-                    post.comments.map((comment) => (
-                      <div key={comment.id} className={classes.comment}>
-                        <strong>{comment.user__username}</strong>
-                        <p>{comment.content}</p>
-                      </div>
-                    ))}
+                  <div class="comments-box-input">
+                    <input
+                      type="text"
+                      placeholder="Add a comment..."
+                      value={currentComment}
+                      onChange={(e) => setCurrentComment(e.target.value)}
+                      onKeyDown={(e) => handleKeyPress(e, post.id)}
+                      className={classes.commentInput}
+                    />
+                    {/* <button
+                      onClick={() => handleAddComment(post.id)}
+                      className={styles.addButton}
+                    >
+                      Add Comment
+                    </button> */}
+                  </div>
+                    {post.comments &&
+                      post.comments.map((comment) => (
+                        <div key={comment.id} className={classes.comment}>
+                          <strong>{comment.user__username}</strong>
+                          <p>{comment.content}</p>
+                        </div>
+                      ))}
                 </div>
                 {/* {post.movie_title && <h3>{post.movie_title}</h3>} */}
               </div>
