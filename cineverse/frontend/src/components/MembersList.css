@@ -1,0 +1,35 @@
+/* General Styles for the Members List */
+.members-list-container {
+    background-color: #282c34; /* Dark background similar to the app header */
+     /* Slightly less than full screen to provide some top and bottom space */
+    color: white;
+    padding: 20px;
+    height: 100vh;
+  }
+  
+  .members-list-title {
+    font-size: 2rem; /* Larger text for the title */
+    margin-bottom: 20px; /* Space below the title */
+  }
+  
+  .members-list {
+    list-style: none; /* Remove default list styling */
+    padding: 0;
+  }
+  
+  .members-list li {
+    padding: 10px; /* Padding around each list item for better touch interaction and visibility */
+    border-bottom: 1px solid #ccc; /* A subtle separator */
+  }
+  
+  .members-list a {
+    color: #61dafb; /* Styling links to be consistent with the rest of your app */
+    text-decoration: none; /* No underline */
+    font-size: 1.2rem; /* Slightly larger font for better readability */
+    transition: color 0.3s ease-in-out; /* Smooth transition for hover effects */
+  }
+  
+  .members-list a:hover {
+    color: #fff; /* White color on hover for better interaction feedback */
+  }
+  

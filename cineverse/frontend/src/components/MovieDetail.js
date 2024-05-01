@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import classes from './MovieDetail.module.css'; // Assuming you have CSS for styling
 
 const MovieDetail = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [posts, setPosts] = useState([]);
   const API_KEY = '720e3633927ed61a55ede58d3a1b033d'; // Replace with your actual TMDB API key
 
   useEffect(() => {
@@ -36,6 +37,19 @@ const MovieDetail = () => {
     fetchMovieReviews();
   }, [id]);
   
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/accounts/api/movie_posts/${id}`);
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, [id]);
 
   if (!movie) {
     return <div className={classes.loading}>Loading...</div>;
@@ -61,18 +75,39 @@ const MovieDetail = () => {
           ))}
         </ul>
         {/* Add the Reviews section here */}
-      <div className={classes.reviewsSection}>
-        <h2>Reviews</h2>
-        {reviews.length > 0 ? (
-          reviews.map(review => (
-            <div key={review.id} className={classes.review}>
-              <h3>{review.author}</h3>
-              <p>{review.content}</p>
+      {/* <div className={classes.reviewsSection}> */}
+        {/* <h2>Reviews</h2> */}
+        {/* {reviews.length > 0 ? ( */}
+          {/* reviews.map(review => ( */}
+            {/* <div key={review.id} className={classes.review}> */}
+              {/* <h3>{review.author}</h3> */}
+              {/* <p>{review.content}</p> */}
               {/* Add more details as you prefer */}
+            {/* </div> */}
+          {/* )) */}
+        {/* ) : ( */}
+          {/* <p>No reviews available.</p> */}
+        {/* )} */}
+      {/* </div> */}
+
+      <div className={classes.postsSection}>
+        <h2>User Posts About This Movie</h2>
+        {posts.length > 0 ? (
+          posts.map(post => (
+            <div key={post.id} className={classes.post}>
+              <strong>
+                <Link to={`/profile/${post.user__username}`} className={classes.postLink}>
+                  {post.user__username}
+                </Link>
+              </strong>
+              <span className={classes.postDateTime}>
+                {new Date(post.created_at).toLocaleString()}
+              </span>
+              <p>{post.content}</p>
             </div>
           ))
         ) : (
-          <p>No reviews available.</p>
+          <p>No posts available for this movie.</p>
         )}
       </div>
     </div>

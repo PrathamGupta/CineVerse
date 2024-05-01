@@ -60,6 +60,29 @@
   /* Add styles for a profile icon here */
 }
 
+.postLink {
+  text-decoration: none;
+  color: white;
+}
+
+.add-movie-link {
+}
+
+.plus-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; /* Adjust size as needed */
+  height: 50px; /* Adjust size as needed */
+  background-color: #1DA1F2; /* Theme color */
+  color: white;
+  font-size: 30px; /* Adjust as needed */
+  border-radius: 50%;
+  text-decoration: none; /* Removes underline */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
 .main-container {
   width: calc(100% - 40px); /* Example: full width minus padding */
   max-width: 800px; /* or however wide you'd like it to be */
@@ -104,14 +127,31 @@
   margin-left: auto; /* Push it to the right side of the nav */
 }
 
+.formSubContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.formSubContainer > div:first-child {
+  flex: 1 1 0;
+}
+
+.post-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
 .postCreationForm {
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .postTextArea {
-  width: 90%; /* This will make the textarea span the full width of its container */
+  width: 97%; /* This will make the textarea span the full width of its container */
   min-height: 100px;
   padding: 10px;
   border-radius: 10px;
@@ -139,4 +179,111 @@
   float: right;
   color: #666;
   font-size: 0.8rem;
+}
+
+
+.editButton, .deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color : white; /* Adjust color as needed */
+  margin-left: 10px;
+  
+}
+
+.moviePreview{
+  flex: 1 1 0;
+  width: 100%;
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+}
+
+.film {
+  display: flex;
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* justify-content: center; */
+  background-color: #222;
+  color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 10px;
+  box-sizing: border-box;
+  /* text-align: center; */
+  /* margin: auto; */
+  margin: 20px 20px 0px 0px;
+  width: 150px; /* Adjust the width as necessary */
+  /* height : 100px; */
+}
+
+.film img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for like and comment buttons */
+.likeButton, .commentButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1rem;
+  padding: 5px 10px;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+}
+
+/* Hover effect for like and comment buttons */
+.likeButton:hover {
+  color: #ff4500; /* Light blue to indicate interactivity */
+}
+
+.commentButton:hover {
+  color: #1DA1F2;
+}
+
+/* Icon styles within buttons */
+.likeButton .fa, .commentButton .fa {
+  margin-right: 5px;
+}
+
+/* Container for likes and comments display */
+.likes-comments {
+  display: flex;
+  justify-content: start;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+/* Individual like and comment count display */
+.like-count, .comment-count {
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  color: #aaa; /* Lighter text for less emphasis compared to main content */
+}
+
+/* Styling for the number next to the icon */
+.like-count span, .comment-count span {
+  margin-left: 5px;
+}
+
+/* Special styling for the active state of like button if liked by the user */
+.likeButton.active {
+  color: #ff4500; /* Reddish color indicating 'liked' state */
+}
+
+.LikeCommentContainer {
+  display: flex;
+  /* flex-direction: column; */
+}
+
+.content-like-comment {
+  display: flex;
+  flex-direction: column;
 }

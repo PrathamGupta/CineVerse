@@ -22,13 +22,17 @@ const SignIn = () => {
         const response = await fetch('http://localhost:8000/accounts/login/', {
             method: 'POST',
             body: formData,
+            // credentials: 'include'
         });
 
         if (response.ok) {
             const data = await response.json();
             console.log(data)
-            setUser({ username: data.username });
+            setUser({ id: data.id, username: data.username });
             // Handle login success, store the token, etc.
+            const { access, refresh } = data.token
+            localStorage.setItem('access', access);  // Store the access token
+            localStorage.setItem('refresh', refresh);
             // Redirect to a new route after login
             navigate('/feed')
         } else {
