@@ -163,11 +163,11 @@ class UserPostsView(View):
         username = request.GET.get('username')
         user = User.objects.get(username=username)
         posts = Post.objects.filter().annotate(
-            likes_count=Count('like'),  # Ensure this 'likes' is the related_name in your Like model
-            comments_count=Count('comment'),  # Ensure this 'comments' is the related_name in your Comment model
+            # likes_count=Count('like'),  # Ensure this 'likes' is the related_name in your Like model
+            # comments_count=Count('comment'),  # Ensure this 'comments' is the related_name in your Comment model
             isLiked= Exists(Like.objects.filter(post=OuterRef('pk'), user=user.id))
         ).order_by('-created_at').values(
-            'id', 'user__username', 'content', 'tmdb_id', 'created_at', 'likes_count', 'comments_count', 'isLiked'
+            'id', 'user__username', 'content', 'tmdb_id', 'created_at',  'isLiked'
         )
 
         enriched_posts = []
@@ -178,7 +178,9 @@ class UserPostsView(View):
                 'id', 'user__username', 'content', 'created_at'
             )
             post_data['comments'] = list(comments)
-            
+            post_data['likes_count'] = Like.objects.filter(post=post_data['id']).count()
+            post_data['comments_count'] = Comment.objects.filter(post=post_data['id']).count()
+
             if post_data['tmdb_id']:
                 response = requests.get(f'https://api.themoviedb.org/3/movie/{post_data["tmdb_id"]}?api_key={API_KEY}')
                 if response.status_code == 200:
