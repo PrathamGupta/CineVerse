@@ -1,9 +1,10 @@
 /* General Styles for the Members List */
 .members-list-container {
     background-color: #282c34; /* Dark background similar to the app header */
-    min-height: 90vh; /* Slightly less than full screen to provide some top and bottom space */
+     /* Slightly less than full screen to provide some top and bottom space */
     color: white;
     padding: 20px;
+    height: 100vh;
   }
   
   .members-list-title {

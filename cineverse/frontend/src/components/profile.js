@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import classes from './Profile.module.css';
 import UserContext from '../userContext';
 import { useFavorites } from './FavoritesContext';
@@ -48,6 +48,7 @@ const settings = {
 const Profile = () => {
     const { user, logout } = useContext(UserContext);
     const { username } = useParams();
+    const navigate = useNavigate();
     const [images, setImages] = useState([]); // State to store image URLs
     // const { favorites } = useFavorites(); // Use favorites from the context
     const [favorites, setFavorites] = useState([]);
@@ -183,7 +184,7 @@ const Profile = () => {
       <div className={classes.bodyContainer}>
         <div className={classes["nav-container"]}>
           <header className={classes["profile-header"]}>
-            <div className={classes["logo"]}>CINEVERSE</div>
+            <div onClick={() => navigate("/feed")} className={classes["logo"]}>CINEVERSE</div>
             <nav>
               <Link to="/films">Films</Link>
               <Link to="/lists">Lists</Link>
