@@ -471,3 +471,75 @@ def get_comments(request, post_id):
         return JsonResponse(list(comments), safe=False, status=200)
     else:
         return JsonResponse({'status': 'no comments found'}, status=404)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_posts(request):
+    username = request.GET.get('username')
+    request_user = User.objects.get(username=request.user)
+    user = User.objects.get(username=username)
+    posts = Post.objects.filter(user=user).annotate(
+            # likes_count=Count('like'),  # Ensure this 'likes' is the related_name in your Like model
+            # comments_count=Count('comment'),  # Ensure this 'comments' is the related_name in your Comment model
+        isLiked= Exists(Like.objects.filter(post=OuterRef('pk'), user=request_user.id))
+    ).order_by('-created_at').values(
+        'id', 'user__username', 'content', 'tmdb_id', 'created_at',  'isLiked'
+    )
+
+    enriched_posts = []
+    for post in posts:
+        post_data = dict(post)
+            # Fetch comments separately since post_data is now a dict and does not support direct query manipulations like 'comment_set'
+        comments = Comment.objects.filter(post_id=post_data['id']).order_by('-created_at').values(
+            'id', 'user__username', 'content', 'created_at'
+        )
+        post_data['comments'] = list(comments)
+        post_data['likes_count'] = Like.objects.filter(post=post_data['id']).count()
+        post_data['comments_count'] = Comment.objects.filter(post=post_data['id']).count()
+
+        if post_data['tmdb_id']:
+            response = requests.get(f'https://api.themoviedb.org/3/movie/{post_data["tmdb_id"]}?api_key={API_KEY}')
+            if response.status_code == 200:
+                movie_details = response.json()
+                post_data['movie_title'] = movie_details.get('title')
+                post_data['movie_poster'] = f"https://image.tmdb.org/t/p/w500{movie_details.get('poster_path', '')}"
+        enriched_posts.append(post_data)
+
+    print(enriched_posts)
+    # return JsonResponse(list(posts), safe=False)
+    return JsonResponse(enriched_posts, safe=False)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_liked_posts(request):
+    username = request.GET.get('username')
+    request_user = User.objects.get(username=request.user)
+    user = User.objects.get(username=username)
+    liked_posts = Post.objects.filter(Exists(Like.objects.filter(post=OuterRef('pk'), user=user))).annotate(
+        isLiked= Exists(Like.objects.filter(post=OuterRef('pk'), user=request_user.id))
+    ).order_by('-created_at').values(
+        'id', 'user__username', 'content', 'tmdb_id', 'created_at',  'isLiked'
+    )
+
+    enriched_posts = []
+    for post in liked_posts:
+        post_data = dict(post)
+            # Fetch comments separately since post_data is now a dict and does not support direct query manipulations like 'comment_set'
+        comments = Comment.objects.filter(post_id=post_data['id']).order_by('-created_at').values(
+            'id', 'user__username', 'content', 'created_at'
+        )
+        post_data['comments'] = list(comments)
+        post_data['likes_count'] = Like.objects.filter(post=post_data['id']).count()
+        post_data['comments_count'] = Comment.objects.filter(post=post_data['id']).count()
+
+        if post_data['tmdb_id']:
+            response = requests.get(f'https://api.themoviedb.org/3/movie/{post_data["tmdb_id"]}?api_key={API_KEY}')
+            if response.status_code == 200:
+                movie_details = response.json()
+                post_data['movie_title'] = movie_details.get('title')
+                post_data['movie_poster'] = f"https://image.tmdb.org/t/p/w500{movie_details.get('poster_path', '')}"
+        enriched_posts.append(post_data)
+
+    print(enriched_posts)
+    # return JsonResponse(list(posts), safe=False)
+    return JsonResponse(enriched_posts, safe=False)

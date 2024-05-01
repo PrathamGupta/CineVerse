@@ -1,11 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import classes from './Profile.module.css';
+import classes from './ProfilePosts.module.css';
 import UserContext from '../userContext';
 // import { useFavorites } from './FavoritesContext';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt, faTrash, faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 
 // Slider settings for react-slick
 const settings = {
@@ -45,7 +47,7 @@ const settings = {
 };
 
 
-const ProfileWatchlist = () => {
+const ProfilePosts = () => {
     const { user, logout } = useContext(UserContext);
     const { username } = useParams();
     const [images, setImages] = useState([]); // State to store image URLs
@@ -58,7 +60,10 @@ const ProfileWatchlist = () => {
         followers_count: 0,
         following_count: 0
     }); // State to store profile statistics
-    const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [currentComment, setCurrentComment] = useState("");
+  const navigate = useNavigate();
+
 
     const API_KEY = '720e3633927ed61a55ede58d3a1b033d'; // Replace with your actual API key
     const baseUrl = 'https://image.tmdb.org/t/p/';
@@ -160,25 +165,74 @@ const ProfileWatchlist = () => {
         }
     };
 
-    useEffect(() => {
-        const fetchWatchlist = async () => {
-            const url = `http://localhost:8000/accounts/user/watchlist_movies/${username}`;
-            try {
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('access')}`,
-                    },
-                });
-                if (!response.ok) throw new Error('Failed to fetch favorite movies');
-                const moviesData = await response.json();
-                setWatchlist(moviesData);
-            } catch (error) {
-                console.error('Error fetching favorite movies:', error);
-            }
-        };
+    const fetchPosts = async () => {
+        const response = await fetch(
+          `http://localhost:8000/accounts/user/get_posts/?username=${username}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access')}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setPosts(data);
+          console.log("Post data: ", posts);
+          console.log("User: ", user);
+        } else {
+          console.error("Failed to fetch posts");
+        }
+      };
     
-        fetchWatchlist();
-    }, [user]);
+      // Fetch posts when the component mounts
+      useEffect(() => {
+        fetchPosts();
+      }, [user.username]);
+
+      const handleLike = async (postId, isLiked) => {
+        const method = isLiked ? 'DELETE' : 'POST'; // Determine method based on current like status
+        const url = isLiked ? `http://localhost:8000/accounts/posts/${postId}/unlike/` : `http://localhost:8000/accounts/posts/${postId}/like/`
+        try {
+          const response = await fetch(url , {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem("access")}`
+            },
+          });
+      
+          if (response.ok) {
+            fetchPosts(); // Refresh posts to show updated like count and state
+          } else {
+            console.error("Failed to toggle like on post");
+          }
+        } catch (error) {
+          console.error("Error toggling like on the post:", error);
+        }
+      };
+    
+      const handleAddComment = async (postId) => {
+        if (!currentComment.trim()) return; // Prevent empty comments
+      
+        try {
+          const response = await fetch(`http://localhost:8000/accounts/posts/${postId}/comment/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem("access")}`
+            },
+            body: JSON.stringify({ content: currentComment })
+          });
+      
+          if (response.ok) {
+            setCurrentComment(""); // Reset comment input
+            fetchPosts(); // Refresh posts to show new comment
+          } else {
+            console.error("Failed to add comment");
+          }
+        } catch (error) {
+          console.error("Error adding the comment:", error);
+        }
+      };
        
 
     return (
@@ -238,18 +292,21 @@ const ProfileWatchlist = () => {
             <nav className={classes["profile-nav"]}>
               <ul className={classes["nav-list"]}>
                 <li>
-                  <Link to={`/profile/${username}`} >
-                    Overview
+                  <Link to={`/profile/${username}`}>Overview</Link>
+                </li>
+                <li>
+                  <Link to={`/profile/${username}/films`}>Films</Link>
+                </li>
+                <li>
+                  <Link
+                    to={`/profile/${username}/posts`}
+                    className={classes.active}
+                  >
+                    Posts
                   </Link>
                 </li>
                 <li>
-                  <Link to={`/profile/${username}/films`} >Films</Link>
-                </li>
-                <li>
-                  <Link to={`/profile/${username}/posts`}>Posts</Link>
-                </li>
-                <li>
-                  <Link to={`/profile/${username}/watchlist`} className={classes.active}>Watchlist</Link>
+                  <Link to={`/profile/${username}/watchlist`}>Watchlist</Link>
                 </li>
                 <li>
                   <Link to={`/profile/${username}/likes`}>Likes</Link>
@@ -264,46 +321,81 @@ const ProfileWatchlist = () => {
             </div>
           </div>
 
-          <div className={classes["content-container"]}>
-            <section className={classes["favorite-films"]}>
-              <h2>WatchList</h2>
-              {watchlist.length > 0 ? (
-                <Slider {...settings}>
-                  {watchlist.map((movie, index) => (
-                    <div key={index} className={classes["film"]}>
-                      <Link to={`/movie/${movie.id}`}>
-                        {" "}
-                        {/* Add Link component here */}
-                        <img
-                          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                          alt={movie.title}
-                          className={classes["movieImage"]}
-                        />
-                        {/* <h3>{movie.title}</h3> */}
+          <div className={classes.feedMainContainer}>
+            <div className={classes["feed-content"]}>
+              {posts.map((post) => (
+                <div key={post.id} className={classes["post"]}>
+                  <div className={classes["post-header"]}>
+                    <strong>
+                      <Link
+                        to={`/profile/${post.user__username}`}
+                        className={classes.postLink}
+                      >
+                        {post.user__username}
                       </Link>
+                    </strong>
+                    <span className={classes.postDateTime}>
+                      {new Date(post.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className={classes["post-content"]}>
+                    {post.movie_poster && (
+                      <div className={classes["film"]}>
+                        <Link to={`/movie/${post.tmdb_id}`}>
+                          {" "}
+                          {/* Add Link component here */}
+                          <img
+                            src={`https://image.tmdb.org/t/p/w500${post.movie_poster}`}
+                            alt={post.movie_title}
+                            className={classes["movieImage"]}
+                          />
+                        </Link>
+                      </div>
+                    )}
+                    <div className="content-like-comment">
+                      <p>{post.content}</p>
+                      <div className={classes.LikeCommentContainer}>
+                        <button
+                          onClick={() => handleLike(post.id, post.isLiked)}
+                          className={`${classes.likeButton} ${
+                            post.isLiked ? classes.active : ""
+                          }`}
+                        >
+                          <FontAwesomeIcon icon={faHeart} />{" "}
+                          {post.likes_count || 0}
+                        </button>
+                        <button
+                          onClick={() => handleAddComment(post.id)}
+                          className={classes.commentButton}
+                        >
+                          <FontAwesomeIcon icon={faComment} />{" "}
+                          {post.comments_count || 0}
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Add a comment..."
+                        value={currentComment}
+                        onChange={(e) => setCurrentComment(e.target.value)}
+                        className={classes.commentInput}
+                      />
+                      {post.comments &&
+                        post.comments.map((comment) => (
+                          <div key={comment.id} className={classes.comment}>
+                            <strong>{comment.user__username}</strong>
+                            <p>{comment.content}</p>
+                          </div>
+                        ))}
                     </div>
-                  ))}
-                </Slider>
-              ) : (
-                <p>Don't forget to add films to your watchlist!</p>
-              )}
-            </section>
-
-            {/* <section className={classes["recent-activity"]}>
-              <h2>Recent Activity</h2>
-              <div className={classes["activity-list"]}>
-                <div className={classes["activity"]}></div>
-                <div className={classes["activity"]}></div>
-                <div className={classes["activity"]}></div>
-              </div>
-              <Link to="#" className={classes["all-activity"]}>
-                ALL
-              </Link>
-            </section> */}
+                    {/* {post.movie_title && <h3>{post.movie_title}</h3>} */}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </main>
       </div>
     );
 };
 
-export default ProfileWatchlist;
+export default ProfilePosts;

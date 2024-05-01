@@ -19,7 +19,7 @@ const Feed = () => {
 
   const fetchPosts = async () => {
     const response = await fetch(
-      `http://localhost:8000/accounts/user_posts/?username=${user.username}`
+      `http://localhost:8000/accounts/get_posts/?username=${user.username}`
     );
     if (response.ok) {
       const data = await response.json();
@@ -250,7 +250,9 @@ const Feed = () => {
                   <div className={classes.LikeCommentContainer}>
                     <button
                       onClick={() => handleLike(post.id, post.isLiked)}
-                      className={`${classes.likeButton} ${post.isLiked ? classes.active : ''}`}            
+                      className={`${classes.likeButton} ${
+                        post.isLiked ? classes.active : ""
+                      }`}
                     >
                       <FontAwesomeIcon icon={faHeart} /> {post.likes_count || 0}
                     </button>
@@ -269,13 +271,13 @@ const Feed = () => {
                     onChange={(e) => setCurrentComment(e.target.value)}
                     className={classes.commentInput}
                   />
-              {post.comments &&
-                post.comments.map((comment) => (
-                  <div key={comment.id} className={classes.comment}>
-                    <strong>{comment.user__username}</strong>
-                    <p>{comment.content}</p>
-                  </div>
-                ))}
+                  {post.comments &&
+                    post.comments.map((comment) => (
+                      <div key={comment.id} className={classes.comment}>
+                        <strong>{comment.user__username}</strong>
+                        <p>{comment.content}</p>
+                      </div>
+                    ))}
                 </div>
                 {/* {post.movie_title && <h3>{post.movie_title}</h3>} */}
               </div>

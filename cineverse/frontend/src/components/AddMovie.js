@@ -97,31 +97,54 @@ const AddMovie = () => {
     };
 
     return (
+      <div className={styles.bodyContainer}>
         <div className={styles.container}>
-            <h1 className={styles.title}>Add Movie</h1>
-            <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search for movies..."
-                    className={styles.searchInput}
+          <h1 className={styles.title}>Add Movie</h1>
+          <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search for movies..."
+              className={styles.searchInput}
+            />
+            <button type="submit" className={styles.searchButton}>
+              Search
+            </button>
+          </form>
+          <div className={styles.results}>
+            {searchResults.map((movie) => (
+              <div key={movie.id} className={styles.resultItem}>
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className={styles.movieImage}
                 />
-                <button type="submit" className={styles.searchButton}>Search</button>
-            </form>
-            <div className={styles.results}>
-                {searchResults.map(movie => (
-                    <div key={movie.id} className={styles.resultItem}>
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className={styles.movieImage} />
-                        <h4 className={styles.movieTitle}>{movie.title}</h4>
-                        <p className={styles.movieOverview}>{movie.overview}</p>
-                        <button onClick={() => handleAddToFavorites(movie)} className={styles.addButton}>Add to Favorites</button>
-                        <button onClick={() => handleAddToWatched(movie)} className={styles.addButton}>Add to Watched movies</button>
-                        <button onClick={() => handleAddToWatchlist(movie)} className={styles.addButton}>Add to Watchlist</button>
-                    </div>
-                ))}
-            </div>
+                <h4 className={styles.movieTitle}>{movie.title}</h4>
+                <p className={styles.movieOverview}>{movie.overview}</p>
+                <button
+                  onClick={() => handleAddToFavorites(movie)}
+                  className={styles.addButton}
+                >
+                  Add to Favorites
+                </button>
+                <button
+                  onClick={() => handleAddToWatched(movie)}
+                  className={styles.addButton}
+                >
+                  Add to Watched movies
+                </button>
+                <button
+                  onClick={() => handleAddToWatchlist(movie)}
+                  className={styles.addButton}
+                >
+                  Add to Watchlist
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
     );
 };
 

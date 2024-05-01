@@ -1,0 +1,442 @@
+/* body {
+    font-family: 'Arial', sans-serif;
+    background-color: #20262E;
+    color: white;
+    margin: 0;
+    padding: 0;
+  } */
+
+  .bodyContainer {
+    min-height: 100vh;
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+    background-color: #20262E;
+    color: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-container {
+    font-family: 'Arial', sans-serif;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 2em;
+    /* background: rgba(0, 0, 0, 0.6); Slightly transparent background */
+    height: 100%;
+    max-width: 1300px;
+    color: #fff;
+    position: relative;
+  }
+  
+  .logo {
+    margin: 0;
+    font-size: 1.5em;
+    color: #F3EFE0;
+    /* Logo color */
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.3em;
+    font-weight: 800;
+    /* text-decoration: none; */
+    }
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: larger;
+}
+
+nav .cta {
+    border: 1px solid #fff;
+    padding: 0.5em 1em;
+    border-radius: 20px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column; /* Stacks children vertically */
+    align-items: center; /* Centers children horizontally */
+    justify-content: center;
+}
+
+.main-sub-container {
+    width: 1300px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-info-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat {
+    padding: 1rem;
+    border-right: 2px #F3EFE0 solid;
+    text-align: center;
+}
+
+.stat:last-child {
+    border-right: none;
+}
+.profile-nav-container{
+    display:flex;
+    justify-content: center;
+
+
+}
+
+  .profile-main {
+    /* display: flex; */
+    text-align: center;
+  }
+  
+  .profile-sidebar {
+    display: none;
+  }
+
+  .profile-nav {
+    display: inline-block; /* Makes the nav container fit its content */
+    margin: 0 auto; /* This will help in centering if the display of parent is flex */
+  }
+  
+  .nav-list {
+    display: flex; /* This will layout your list items in a row */
+    justify-content: center; /* This will center the list items */
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .nav-list li {
+    margin: 0 10px; /* Add spacing between your list items */
+  }
+  
+  .nav-list li a {
+    color: #F3EFE0;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .nav-list li a:hover,
+  .nav-list li a.active {
+    background-color: #333;
+  }
+  
+  .user-info {
+    text-align: center;
+  }
+  
+  .user-image {
+    width: 100px;
+    height: 100px;
+    background-color: #444;
+    border-radius: 50%;
+    margin: 0 auto;
+  }
+  
+  .username {
+    font-size: 24px;
+    color: #F3EFE0;
+  }
+  
+  .edit-profile {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+  }
+  
+  .profile-content {
+    width: 50%;
+    padding: 20px;
+  }
+  
+  .favorite-films, .recent-activity {
+    background-color: #333;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-ads {
+    width: 25%;
+    padding: 20px;
+  }
+
+  
+  .add-movie-link {
+    position: fixed; /* or absolute, depending on layout */
+    right: 20px; /* Adjust based on layout */
+    bottom: 20px; /* Adjust based on layout */
+    z-index: 10; /* Ensure it's above other content */
+}
+
+.plus-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    background-color: #007bff; /* Theme color */
+    color: white;
+    font-size: 30px; /* Adjust as needed */
+    border-radius: 50%;
+    text-decoration: none; /* Removes underline */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.plus-icon:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+  
+ /* .profile-footer {
+    /* Add styles for your footer */
+  /*}
+  
+  /* Add to your existing Profile.css */
+
+.content-container {
+    width: 100%;
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  
+  .favorite-films,
+  .recent-activity {
+    background-color: #333;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+  }
+  
+  .favorite-films h2,
+  .recent-activity h2 {
+    color: #F3EFE0;
+    margin-bottom: 10px;
+  }
+  
+  .film-list,
+  .activity-list {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .film,
+  .activity {
+    background-color: #20262E;
+    width: calc(33.333% - 10px);
+    height: 150px;
+    border-radius: 4px;
+  }
+  
+  .all-activity {
+    display: block;
+    text-align: right;
+    text-decoration: none;
+    color: #F3EFE0;
+    margin-top: 10px;
+  }
+  
+  .all-activity:hover {
+    text-decoration: underline;
+  }
+  
+  .film-list {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+  }
+  
+  .film {
+    display: flex;
+    /* flex-direction: column; */
+    /* align-items: center; */
+    /* justify-content: center; */
+    background-color: #222;
+    color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+    /* text-align: center; */
+    /* margin: auto; */
+    margin: 20px 20px 0px 0px;
+    width: 150px; /* Adjust the width as necessary */
+    height : 200px;
+  }
+  
+  .film img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .slick-list {
+    margin: 0 auto;
+  }
+  
+  .slick-slide {
+    padding: 0 10px;
+  }
+  
+  .slick-track {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .slick-slide {
+      padding: 0 10px;
+    }
+    
+    .film {
+      width: 150px; /* Adjust the width for smaller screens */
+    }
+  
+    .film img {
+      max-width: 150px; /* Adjust if necessary */
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .slick-slide {
+      padding: 0 5px;
+    }
+  
+    .film {
+      width: 100px; /* Adjust the width for even smaller screens */
+    }
+  
+    .film img {
+      max-width: 100px; /* Adjust if necessary */
+    }
+  }
+
+  .post {
+    background-color: #333;
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 10px;
+    /* Additional styling for posts */
+  }
+
+  .postDateTime {
+    float: right;
+    color: #666;
+    font-size: 0.8rem;
+  }
+
+  .postLink {
+    text-decoration: none;
+    color: white;
+  }
+
+  .likeButton, .commentButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 1rem;
+    padding: 5px 10px;
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Hover effect for like and comment buttons */
+  .likeButton:hover {
+    color: #ff4500; /* Light blue to indicate interactivity */
+  }
+  
+  .commentButton:hover {
+    color: #1DA1F2;
+  }
+  
+  /* Icon styles within buttons */
+  .likeButton .fa, .commentButton .fa {
+    margin-right: 5px;
+  }
+  
+  /* Container for likes and comments display */
+  .likes-comments {
+    display: flex;
+    justify-content: start;
+    font-size: 0.85rem;
+    margin-top: 5px;
+  }
+  
+  /* Individual like and comment count display */
+  .like-count, .comment-count {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    color: #aaa; /* Lighter text for less emphasis compared to main content */
+  }
+  
+  /* Styling for the number next to the icon */
+  .like-count span, .comment-count span {
+    margin-left: 5px;
+  }
+  
+  /* Special styling for the active state of like button if liked by the user */
+  .likeButton.active {
+    color: #ff4500; /* Reddish color indicating 'liked' state */
+  }
+  
+  .LikeCommentContainer {
+    display: flex;
+    /* flex-direction: column; */
+  }
+  
+  .content-like-comment {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .post-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .feed-content {
+    margin-top: 20px;
+  }
+
+  .feedMainContainer {
+    width: calc(100% - 40px); /* Example: full width minus padding */
+    max-width: 800px; /* or however wide you'd like it to be */
+    padding: 20px;
+    margin: 0 auto; /* Centers the content if it's not as wide as the page */
+    
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+  }
