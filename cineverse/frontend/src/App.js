@@ -13,6 +13,7 @@ import MovieDetail from './components/MovieDetail';
 import { MovieProvider} from './MovieContext'
 import ProfileMovies from './components/ProfileMovies'
 import ProfileWatchlist from './components/ProfileWatchlist'
+import MembersList from './components/MembersList';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path="/add-movie" element={<AddMovie />} />
               <Route path="/post-movie" element={<PostMovie />} />
               <Route path="/movie/:id" element={<MovieDetail />} />
+              <Route path="/members" element={<MembersList />} />
             </Routes>
           </MovieProvider>
         </FavoritesProvider>

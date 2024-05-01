@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import CreatePostView, UserPostsView, get_user_profile
 from .views import follow_user, unfollow_user, check_follow_status, fetch_movies, fetch_movie_images, add_favorite, remove_favorite, search_movies, fetch_favorite_movies, get_movie_posts
-from .views import add_watched_movie, remove_watched_movie, fetch_watched_movies, add_to_watchlist, remove_from_watchlist, fetch_watchlist_movies
+from .views import add_watched_movie, remove_watched_movie, fetch_watched_movies, add_to_watchlist, remove_from_watchlist, fetch_watchlist_movies, list_users
 
 urlpatterns = [
     path("register/", views.signup, name="register"),
@@ -38,4 +38,7 @@ urlpatterns = [
     path('user/add_to_watchlist/', add_to_watchlist, name='add_to_watchlist'),
     path('user/remove_from_watchlist/<int:tmdb_id>/', remove_from_watchlist, name='remove_from_watchlist'),
     path('user/watchlist_movies/<str:user_name>/', fetch_watchlist_movies, name='fetch_watchlist_movies'),
+
+
+    path('api/users/', list_users, name='list_users'),
 ]

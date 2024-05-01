@@ -17,6 +17,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from django.core import serializers
 
 API_KEY='720e3633927ed61a55ede58d3a1b033d'
 
@@ -396,3 +397,11 @@ def fetch_watchlist_movies(request, user_name):
             movies_details.append(response.json())
     
     return JsonResponse(movies_details, safe=False)
+
+
+
+def list_users(request):
+    # Fetching only specific fields for serialization
+    users = User.objects.all().values('id', 'username', 'email')  # Adjust the fields as needed
+    user_list = list(users)  # Convert QuerySet to a list of dictionaries
+    return JsonResponse(user_list, safe=False)
