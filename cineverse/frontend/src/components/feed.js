@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import classes from "./Feed.module.css";
 import UserContext from "../userContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPencilAlt, faTrash, faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 import { useFavorites } from "./FavoritesContext";
 import { useMovie } from "../MovieContext";
 
@@ -15,6 +15,7 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
   const { selectedMovie } = useMovie();
   const { clearSelectedMovie } = useMovie();
+  const [currentComment, setCurrentComment] = useState("");
 
   const fetchPosts = async () => {
     const response = await fetch(
@@ -34,6 +35,52 @@ const Feed = () => {
   useEffect(() => {
     fetchPosts();
   }, [user.username]);
+
+  const handleLike = async (postId, isLiked) => {
+    const method = isLiked ? 'DELETE' : 'POST'; // Determine method based on current like status
+    const url = isLiked ? `http://localhost:8000/accounts/posts/${postId}/unlike/` : `http://localhost:8000/accounts/posts/${postId}/like/`
+    try {
+      const response = await fetch(url , {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("access")}`
+        },
+      });
+  
+      if (response.ok) {
+        fetchPosts(); // Refresh posts to show updated like count and state
+      } else {
+        console.error("Failed to toggle like on post");
+      }
+    } catch (error) {
+      console.error("Error toggling like on the post:", error);
+    }
+  };
+
+  const handleAddComment = async (postId) => {
+    if (!currentComment.trim()) return; // Prevent empty comments
+  
+    try {
+      const response = await fetch(`http://localhost:8000/accounts/posts/${postId}/comment/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("access")}`
+        },
+        body: JSON.stringify({ content: currentComment })
+      });
+  
+      if (response.ok) {
+        setCurrentComment(""); // Reset comment input
+        fetchPosts(); // Refresh posts to show new comment
+      } else {
+        console.error("Failed to add comment");
+      }
+    } catch (error) {
+      console.error("Error adding the comment:", error);
+    }
+  };
 
   // Handle post creation or update
   const handlePostSubmit = async (e) => {
@@ -126,12 +173,12 @@ const Feed = () => {
           <div className={classes.formSubContainer}>
             <div className={classes.moviePreview}>
               {selectedMovie && (
-                <div>
+                <div className={classes.film}>
                   <img
                     src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}
                     alt={selectedMovie.title}
                   />
-                  <p>{selectedMovie.title}</p>
+                  {/* <p>{selectedMovie.title}</p> */}
                 </div>
               )}
               <textarea
@@ -187,16 +234,49 @@ const Feed = () => {
               <div className={classes["post-content"]}>
                 {post.movie_poster && (
                   <div className={classes["film"]}>
-                  <Link to={`/movie/${post.tmdb_id}`}> {/* Add Link component here */}
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${post.movie_poster}`}
-                    alt={post.movie_title}
-                    className={classes["movieImage"]}
-                  />
-                  </Link>
+                    <Link to={`/movie/${post.tmdb_id}`}>
+                      {" "}
+                      {/* Add Link component here */}
+                      <img
+                        src={`https://image.tmdb.org/t/p/w500${post.movie_poster}`}
+                        alt={post.movie_title}
+                        className={classes["movieImage"]}
+                      />
+                    </Link>
                   </div>
                 )}
-                <p>{post.content}</p>
+                <div className="content-like-comment">
+                  <p>{post.content}</p>
+                  <div className={classes.LikeCommentContainer}>
+                    <button
+                      onClick={() => handleLike(post.id, post.isLiked)}
+                      className={`${classes.likeButton} ${post.isLiked ? classes.active : ''}`}            
+                    >
+                      <FontAwesomeIcon icon={faHeart} /> {post.likes_count || 0}
+                    </button>
+                    <button
+                      onClick={() => handleAddComment(post.id)}
+                      className={classes.commentButton}
+                    >
+                      <FontAwesomeIcon icon={faComment} />{" "}
+                      {post.comments_count || 0}
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={currentComment}
+                    onChange={(e) => setCurrentComment(e.target.value)}
+                    className={classes.commentInput}
+                  />
+              {post.comments &&
+                post.comments.map((comment) => (
+                  <div key={comment.id} className={classes.comment}>
+                    <strong>{comment.user__username}</strong>
+                    <p>{comment.content}</p>
+                  </div>
+                ))}
+                </div>
                 {/* {post.movie_title && <h3>{post.movie_title}</h3>} */}
               </div>
             </div>

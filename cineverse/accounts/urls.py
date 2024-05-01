@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import CreatePostView, UserPostsView, get_user_profile
 from .views import follow_user, unfollow_user, check_follow_status, fetch_movies, fetch_movie_images, add_favorite, remove_favorite, search_movies, fetch_favorite_movies, get_movie_posts
-from .views import add_watched_movie, remove_watched_movie, fetch_watched_movies, add_to_watchlist, remove_from_watchlist, fetch_watchlist_movies, list_users
+from .views import add_watched_movie, remove_watched_movie, fetch_watched_movies, add_to_watchlist, remove_from_watchlist, fetch_watchlist_movies, add_like, add_comment, remove_like, list_users
 
 urlpatterns = [
     path("register/", views.signup, name="register"),
@@ -41,4 +41,9 @@ urlpatterns = [
 
 
     path('api/users/', list_users, name='list_users'),
+
+    #Like comments
+    path('posts/<int:post_id>/like/', add_like, name='add-like'),
+    path('posts/<int:post_id>/unlike/', remove_like, name='delete-like'),
+    path('posts/<int:post_id>/comment/', add_comment, name='add-comment'),
 ]

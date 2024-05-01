@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import requests
 from django.utils.decorators import method_decorator
-from .models import Post, User, Follow, FavoriteMovie, WatchedMovie, WatchlistMovie
+from .models import Post, User, Follow, FavoriteMovie, WatchedMovie, WatchlistMovie, Like, Comment
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.forms.models import model_to_dict
@@ -18,6 +18,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.core import serializers
+from django.db.models import Count, Prefetch, Exists, OuterRef
 
 API_KEY='720e3633927ed61a55ede58d3a1b033d'
 
@@ -157,24 +158,34 @@ class CreatePostView(APIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class UserPostsView(View):
     # @method_decorator(login_required)
+    # permission_classes = [IsAuthenticated]
     def get(self, request):
         username = request.GET.get('username')
         user = User.objects.get(username=username)
-        posts = Post.objects.select_related('user').filter().values(
-            'id', 'user__username', 'content', 'tmdb_id', 'created_at'
-        ).order_by('-created_at')
-
-        # print(posts)
+        posts = Post.objects.filter().annotate(
+            likes_count=Count('like'),  # Ensure this 'likes' is the related_name in your Like model
+            comments_count=Count('comment'),  # Ensure this 'comments' is the related_name in your Comment model
+            isLiked= Exists(Like.objects.filter(post=OuterRef('pk'), user=user.id))
+        ).order_by('-created_at').values(
+            'id', 'user__username', 'content', 'tmdb_id', 'created_at', 'likes_count', 'comments_count', 'isLiked'
+        )
 
         enriched_posts = []
         for post in posts:
-            if post['tmdb_id']:
-                response = requests.get(f'https://api.themoviedb.org/3/movie/{post["tmdb_id"]}?api_key={API_KEY}')
+            post_data = dict(post)
+            # Fetch comments separately since post_data is now a dict and does not support direct query manipulations like 'comment_set'
+            comments = Comment.objects.filter(post_id=post_data['id']).order_by('-created_at').values(
+                'id', 'user__username', 'content', 'created_at'
+            )
+            post_data['comments'] = list(comments)
+            
+            if post_data['tmdb_id']:
+                response = requests.get(f'https://api.themoviedb.org/3/movie/{post_data["tmdb_id"]}?api_key={API_KEY}')
                 if response.status_code == 200:
                     movie_details = response.json()
-                    post['movie_title'] = movie_details.get('title')
-                    post['movie_poster'] = f"https://image.tmdb.org/t/p/w500{movie_details.get('poster_path', '')}"
-            enriched_posts.append(post)
+                    post_data['movie_title'] = movie_details.get('title')
+                    post_data['movie_poster'] = f"https://image.tmdb.org/t/p/w500{movie_details.get('poster_path', '')}"
+            enriched_posts.append(post_data)
 
         print(enriched_posts)
         # return JsonResponse(list(posts), safe=False)
@@ -398,10 +409,63 @@ def fetch_watchlist_movies(request, user_name):
     
     return JsonResponse(movies_details, safe=False)
 
-
-
+@api_view(['GET'])
 def list_users(request):
     # Fetching only specific fields for serialization
     users = User.objects.all().values('id', 'username', 'email')  # Adjust the fields as needed
     user_list = list(users)  # Convert QuerySet to a list of dictionaries
     return JsonResponse(user_list, safe=False)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_like(request, post_id):
+    # user = request.user
+    user = request.user
+    post = Post.objects.get(id=post_id)
+    like= Like.objects.get_or_create(user=user, post=post)
+    # if created:
+    return JsonResponse({'status': 'like added'}, status=201)
+    # else:
+        # return JsonResponse({'status': 'like already exists'}, status=200)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_like(request, post_id):
+    try:
+        user = request.user
+        like = Like.objects.get(post_id=post_id, user=user)
+        like.delete()
+        return JsonResponse({'status': 'success', 'message': 'Like removed successfully.'}, status=200)
+    except Like.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Like not found.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_comment(request, post_id):
+    try:
+        user = request.user
+        post = Post.objects.get(id=post_id)  # Ensure the post exists
+        content = request.data.get('content', '').strip()  # Get the comment content and strip any excess whitespace
+        
+        if not content:  # Check if the content is empty
+            return JsonResponse({'status': 'error', 'message': 'Comment content cannot be empty'}, status=400)
+        
+        # Create a new comment
+        comment = Comment.objects.create(user=user, post=post, content=content)
+        return JsonResponse({'status': 'success', 'message': 'Comment added successfully', 'comment_id': comment.id}, status=201)
+    
+    except Post.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Post not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_comments(request, post_id):
+    comments = Comment.objects.filter(post_id=post_id).values('id', 'content', 'user__username', 'created_at')
+    if comments:
+        return JsonResponse(list(comments), safe=False, status=200)
+    else:
+        return JsonResponse({'status': 'no comments found'}, status=404)

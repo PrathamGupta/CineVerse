@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Movie, TVShow, Review, Rating, Group, GroupMember, Post, Message, Follow, FavoriteMovie
+from .models import User, Movie, TVShow, Review, Rating, Group, GroupMember, Post, Message, Follow, FavoriteMovie, WatchedMovie, WatchlistMovie, Like, Comment
 
 
 # Register your models here.
@@ -14,3 +14,8 @@ admin.site.register(Post)
 admin.site.register(Message)
 admin.site.register(Follow)
 admin.site.register(FavoriteMovie)
+admin.site.register(WatchedMovie)
+admin.site.register(WatchlistMovie)
+admin.site.register(Like)
+admin.site.register(Comment)
+
